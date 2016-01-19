@@ -14,8 +14,13 @@ $config = [
     'bootstrap' => ['log'],
     'modules' => [
 		'rbac' => [
-			'class' => 'johnitvn\rbacplus\Module',
-			'userModelLoginField' => 'name',
+			'class' => 'yii2mod\rbac\Module',
+				'controllerMap' => [
+					'assignment' => [
+						'class' => 'yii2mod\rbac\controllers\AssignmentController',
+						'userClassName' => 'common\models\User',
+					]
+				]
 		],
 		'gridview' =>  [
 			'class' => 'kartik\grid\Module'
@@ -23,7 +28,6 @@ $config = [
 	],
     'components' => [
         'user' => [
-            'class' => 'common\components\DrupalUser',
 			'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
         ],
@@ -44,6 +48,11 @@ $config = [
 		],
 		'authManager' => [
 			'class' => 'yii\rbac\DbManager',
+		],
+		'urlManager' => [
+			'rules' => [
+				'rbac' => 'auth/index',
+			],
 		],
     ],
     'params' => $params,

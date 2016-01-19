@@ -41,7 +41,7 @@ AppAsset::register($this);
 				$eventItems[] = ['label' => "Events I'm working",'url' => ['/me/events']];
 			}
 
-			if(Yii::$app->user->hasRole('administrator'))
+			if(true || Yii::$app->user->hasRole('administrator'))
 			{
 				$eventItems[] = '<li class="divider">';
 				$eventItems[] = ['label' => 'Admin Events', 'url' => ['/event/admin']];
@@ -64,7 +64,7 @@ AppAsset::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-					Yii::$app->user->isGuest ? '' : ['label' => 'Logged in as ' . Yii::$app->user->identity->name, 'url' => ['/me']],
+					Yii::$app->user->isGuest ? '' : ['label' => 'Logged in as ' . Yii::$app->user->identity->display_name, 'url' => ['/me']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
                         ['label' => 'Logout', 'url' => ['/site/logout'],

@@ -3,22 +3,17 @@
 use yii\db\Schema;
 use yii\db\Migration;
 
-class m160114_161121_add_user_table extends Migration
+class m160115_193813_add_email_to_user extends Migration
 {
     public function up()
     {
-		$this->createTable('user', [
-			'id' => $this->integer(),
-			'real_name' => $this->string(),
-			'display_name' => $this->string(),
-		]);
+		$this->addColumn('user', 'email', $this->string());
 
-		$this->addPrimaryKey('user_id', 'user', 'id');
     }
 
     public function down()
     {
-		$this->dropTable('user');
+		$this->dropColumn('user', 'email');
     }
 
     /*

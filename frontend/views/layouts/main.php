@@ -46,7 +46,7 @@ AppAsset::register($this);
 			'url' => ['/shift/mine'],
 		];
         $menuItems[] = [
-            'label' => 'Logout (' . Yii::$app->user->identity->name . ')',
+            'label' => 'Logout (' . Yii::$app->user->identity->display_name . ')',
             'url' => ['/site/logout'],
             'linkOptions' => ['data-method' => 'post']
         ];

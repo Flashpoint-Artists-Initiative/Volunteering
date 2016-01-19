@@ -20,7 +20,8 @@
         "yiisoft/yii2-swiftmailer": "*",
         "kartik-v/yii2-widget-datetimepicker": "*",
         "yiisoft/yii2-debug": "^2.0",
-        "johnitvn/yii2-rbac-plus": "*"
+		"yii2mod/yii2-rbac": "*",
+        "fxp/composer-asset-plugin": "~1.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
