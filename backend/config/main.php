@@ -19,6 +19,7 @@ $config = [
 					'assignment' => [
 						'class' => 'yii2mod\rbac\controllers\AssignmentController',
 						'userClassName' => 'common\models\User',
+						'usernameField' => 'display_name',
 					]
 				]
 		],
@@ -48,11 +49,6 @@ $config = [
 		],
 		'authManager' => [
 			'class' => 'yii\rbac\DbManager',
-		],
-		'urlManager' => [
-			'rules' => [
-				'rbac' => 'auth/index',
-			],
 		],
     ],
     'params' => $params,

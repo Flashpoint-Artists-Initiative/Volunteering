@@ -15,7 +15,6 @@ $config = [
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'user' => [
-            'class' => 'common\components\DrupalUser',
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
         ],

@@ -10,7 +10,6 @@ use kartik\datetime\DateTimePicker;
 ?>
 
 <div class="shift-form">
-<?php var_dump($model->errors);?>
 
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'title')->textInput(['maxlength' => 255]) ?>

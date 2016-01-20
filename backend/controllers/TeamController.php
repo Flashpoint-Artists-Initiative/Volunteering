@@ -11,6 +11,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii2mod\rbac\components\AccessControl;
 
 /**
  * TeamController implements the CRUD actions for Team model.
@@ -20,6 +21,9 @@ class TeamController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+			],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

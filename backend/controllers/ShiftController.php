@@ -8,6 +8,7 @@ use common\models\ShiftSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii2mod\rbac\components\AccessControl;
 
 /**
  * ShiftController implements the CRUD actions for Shift model.
@@ -17,6 +18,9 @@ class ShiftController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+			],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

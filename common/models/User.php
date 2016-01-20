@@ -17,6 +17,21 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return 'user';
     }
 
+    public function rules()
+    {
+        return [
+			[['email', 'display_name', 'real_name'], 'required', 'on' => 'update'],
+			[['display_name'], 'unique', 'on' => 'update'],
+        ];
+    }
+
+	public function attributeLabels()
+	{
+		return  [
+			'real_name' => 'Burn Name',
+		];
+	}
+
     /**
      * @inheritdoc
      */
@@ -145,10 +160,5 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public function getParticipation()
 	{
 		Participant::findAll(['user_id' => $this->uid]);
-	}
-
-	public function getUsername()
-	{
-		return $this->display_name;
 	}
 }

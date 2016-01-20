@@ -17,6 +17,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
+				'except' => ['login', 'userinfo'],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),

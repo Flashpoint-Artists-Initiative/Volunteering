@@ -8,6 +8,7 @@ use common\models\SettingsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii2mod\rbac\components\AccessControl;
 
 /**
  * SettingsController implements the CRUD actions for Settings model.
@@ -17,6 +18,9 @@ class SettingsController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+			],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

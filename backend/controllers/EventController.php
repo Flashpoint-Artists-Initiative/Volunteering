@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii2mod\rbac\components\AccessControl;
 
 /**
  * EventController implements the CRUD actions for Event model.
@@ -25,20 +26,8 @@ class EventController extends Controller
                     'delete' => ['post'],
                 ],
             ],
-			'access' => [
-				'class' => \yii\filters\AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'actions' => ['admin','index', 'create', 'update', 'clone'],
-						'roles' => ['administrator'],
-					],
-					[
-						'allow' => true,
-						'actions' => ['index', 'view'],
-						'roles' => ['?', '@'],
-					],
-				],
+            'access' => [
+                'class' => AccessControl::className(),
 			],
         ];
     }

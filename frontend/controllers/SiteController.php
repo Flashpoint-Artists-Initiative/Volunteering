@@ -15,6 +15,7 @@ use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use common\models\Team;
 use common\models\Event;
+use common\components\UserinfoBehavior;
 
 /**
  * Site controller
@@ -27,6 +28,10 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
+			'userinfo' => [
+				'class' => UserinfoBehavior::className(),
+				'except' => ['userinfo', 'login'],
+			],
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout', 'signup', 'index'],
@@ -221,6 +226,26 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+	public function actionUserinfo()
+	{
+		if(Yii::$app->user->isGuest)
+		{
+			return $this->redirect('login');
+		}
+
+		$user = Yii::$app->user->identity;
+		$user->setScenario('update');
+		if($user->load(Yii::$app->request->post()) && $user->save())
+		{
+			Yii::$app->session->addFlash("success", "Thank you for filling out your user information");
+			return $this->redirect('/site/index');
+		}
+
+		return $this->render('userinfo', [
+			'model' => $user,
+		]);
+	}
 
     protected function loadEvent($id)
     {

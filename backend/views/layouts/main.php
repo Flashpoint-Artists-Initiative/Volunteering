@@ -36,15 +36,22 @@ AppAsset::register($this);
 			$eventItems = [
 				['label' => 'All Events','url' => ['/event/index']],
 			];
+			$adminItems = [
+				'label' => 'Admin',
+				'items' => []
+			];
+
 			if(!Yii::$app->user->isGuest)
 			{
 				$eventItems[] = ['label' => "Events I'm working",'url' => ['/me/events']];
 			}
 
-			if(true || Yii::$app->user->hasRole('administrator'))
+			if(Yii::$app->user->can('administrator'))
 			{
 				$eventItems[] = '<li class="divider">';
 				$eventItems[] = ['label' => 'Admin Events', 'url' => ['/event/admin']];
+
+				$adminItems['items'][] = ['label' => 'Auth', 'url' => ['/rbac']];
 			}
 
             echo Nav::widget([
@@ -59,6 +66,7 @@ AppAsset::register($this);
 						],
 					],
 					Yii::$app->user->isGuest ? '': ['label' => 'My Shifts', 'url' => ['/me/shifts']],
+					Yii::$app->user->can('administrator') ? $adminItems : '',
                 ],
             ]);
             echo Nav::widget([
@@ -77,6 +85,9 @@ AppAsset::register($this);
         <div class="container">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
+            <?= Breadcrumbs::widget([
+                'links' => isset($this->params['sidebar']) ? $this->params['sidebar'] : [],
             ]) ?>
             <?= $content ?>
         </div>

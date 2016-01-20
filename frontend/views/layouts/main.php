@@ -34,14 +34,17 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
     ];
+	$leftItems = [];
+
     if (Yii::$app->user->isGuest) {
         $menuItems[] = "<li>" . Html::a('Signup', "http://alchemyburn.com/user/register", ["target" => "_blank"]) . "</li>";
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-		$menuItems[] = [
+		$leftItems[] = [
 			'label' => 'My Shifts',
 			'url' => ['/shift/mine'],
 		];
@@ -51,6 +54,12 @@ AppAsset::register($this);
             'linkOptions' => ['data-method' => 'post']
         ];
     }
+
+	echo Nav::widget([
+		'options' => ['class' => 'navbar-nav navbar-left'],
+		'items' => $leftItems,
+	]);
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
