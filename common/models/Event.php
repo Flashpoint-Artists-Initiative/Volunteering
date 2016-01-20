@@ -120,4 +120,9 @@ class Event extends \yii\db\ActiveRecord
 	{
 		return $this->hasMany(Team::className(), ['event_id' => 'id']);
 	}
+
+	public function getDropdownName()
+	{
+		return sprintf("%s (%s)", $this->name, date("M Y", $this->start));
+	}
 }

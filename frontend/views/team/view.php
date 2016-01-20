@@ -4,6 +4,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 ?>
 <h1>Signup for <?php echo sprintf("%s %s", Html::encode($event->name), Html::encode($team->name));?> shifts</h1>
+<p><strong>Contact:</strong> <?php echo Html::mailto($team->contact, $team->contact);?></p>
+<p><?php echo Html::encode($team->description);?></p>
 <?php foreach($days as $timestamp => $dp):?>
 <h3><?php echo date('l, M j, Y', $timestamp);?></h3>
 <?php echo GridView::widget([

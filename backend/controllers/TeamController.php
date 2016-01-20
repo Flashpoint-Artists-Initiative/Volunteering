@@ -7,6 +7,7 @@ use common\models\Team;
 use common\models\Event;
 use common\models\Shift;
 use common\models\TeamSearch;
+use common\components\MDateTime;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -57,6 +58,30 @@ class TeamController extends Controller
     {
 		$model = $this->findModel($id);
 
+		$event = $model->event;
+
+		$start = new MDateTime($event->start, new \DateTimeZone('EST5EDT'));
+		$start->subToStart('D');
+
+		$days = [];
+
+		while($start->timestamp < $event->end)
+		{
+			$days[$start->timestamp] = new ActiveDataProvider([
+				'query' => Shift::find()->where(
+					"team_id = :id AND active = true AND start_time BETWEEN :start AND :end",
+					[':id' => $model->id, ':start' => $start->timestamp, ':end' => $start->timestamp + 86400]),
+				'pagination' => false,
+				'sort' => [
+					'defaultOrder' => [
+						'start_time' => SORT_ASC,
+					],
+				],
+			]);
+
+			$start->add(new \DateInterval('P1D'));
+		}
+
 		$dp = new ActiveDataProvider([
 			'query' => Shift::find()->where(['team_id' => $id]),
 			'pagination' => false,
@@ -65,8 +90,6 @@ class TeamController extends Controller
 		$shift = new Shift();
 		$shift->team_id = $model->id;
 		$shift->active = true;
-
-		$events = Event::findAll(['active' => true]);
 
         if ($shift->load(Yii::$app->request->post()))
 		{
@@ -77,7 +100,7 @@ class TeamController extends Controller
             'model' => $model,
 			'shift' => $shift,
 			'dataProvider' => $dp,
-			'events' => $events,
+			'days' => $days,
         ]);
     }
 

@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Shift;
+use common\models\Shift;
 
 /**
  * ShiftSearch represents the model behind the search form about `app\models\Shift`.

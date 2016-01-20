@@ -19,7 +19,7 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'contact')->textInput(['maxlength' => 255]) ?>
 
-	<?= $form->field($model, 'event_id')->dropDownList(ArrayHelper::map($events, 'id', 'name'), ['prompt' => 'Select an active Event']);?>
+	<?= $form->field($model, 'event_id')->dropDownList(ArrayHelper::map($events, 'id', 'dropdownName'), ['prompt' => 'Select an active Event']);?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

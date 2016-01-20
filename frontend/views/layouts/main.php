@@ -45,8 +45,11 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
 		$leftItems[] = [
-			'label' => 'My Shifts',
-			'url' => ['/shift/mine'],
+			'label' => 'My Account',
+			'items' => [
+				['label' => 'My Shifts', 'url' => ['/shift/mine']],
+				['label' => 'Account Settings', 'url' => ['/site/userinfo']],
+			],
 		];
         $menuItems[] = [
             'label' => 'Logout (' . Yii::$app->user->identity->display_name . ')',

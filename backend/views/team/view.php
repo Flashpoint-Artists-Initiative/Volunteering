@@ -10,7 +10,7 @@ use kartik\datetime\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Team */
 
-$this->title = $model->name . ' - ' . $model->event->name;
+$this->title = $model->event->name . ' - ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Events', 'url' => ['/event/index']];
 $this->params['breadcrumbs'][] = ['label' => $model->event->name, 'url' => ['/event/view', 'id' => $model->event->id]];
 $this->params['breadcrumbs'][] = $model->name;
@@ -42,24 +42,42 @@ $this->params['breadcrumbs'][] = $model->name;
 			],
         ],
     ]) ?>
-	
-	<?= GridView::widget([
-		'dataProvider' => $dataProvider,
+
+	<?php foreach($days as $timestamp => $dp):?>
+	<h3><?php echo date('l, M j, Y', $timestamp);?></h3>
+	<?php echo GridView::widget([
+		'dataProvider' => $dp,
 		'columns' => [
+			'title',
 			[
-				'attribute' => 'title',
-				'format' => 'raw',
-				'value' => function($data){return Html::a(Html::encode($data->title), ['/shift/view', 'id' => $data->id]);},
+				'label' => 'Time',
+				'attribute' => 'start_time',
+				'format' => 'text',
+				'value' => function($model){
+					$start = date('g:i a', $model->start_time);
+					$end = date('g:i a', $model->start_time + ($model->length * 3600));
+					return sprintf("%s - %s (%u hours)", $start, $end, $model->length);
+				},
+			],
+			'min_needed',
+			'max_needed',
+			'status',
+            [
+				'class' => 'yii\grid\ActionColumn',
+				'controller' => 'shift',
 			],
 		],
 	]);?>
-
+	<?php endforeach;?>
+	
 	<h2>Add New Shift</h2>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($shift, 'title')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($shift, 'length')->textInput() ?>
-	<p>In Hours</p>
+    <div class="form-group">
+		<?= $form->field($shift, 'length')->textInput() ?>
+		<p class="help-block">In Hours</p>
+	</div>
 
     <?= $form->field($shift, 'formStart')->widget(DateTimePicker::classname(), [
 		'pluginOptions' => [
