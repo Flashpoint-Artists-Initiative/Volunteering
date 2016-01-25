@@ -1,16 +1,15 @@
 <?php
 namespace common\models;
 
-require_once DRUPAL_ROOT . '/includes/password.inc';
-
 use Yii;
 use yii\db\ActiveRecord;
+use common\models\Requirement;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $pass;
-    public $authKey;
-    public $accessToken;
+	public $new_password;
+	public $new_password_repeat;
+	public $settings;
 
     public static function tableName()
     {
@@ -20,15 +19,21 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-			[['email', 'display_name', 'real_name'], 'required', 'on' => 'update'],
-			[['display_name'], 'unique', 'on' => 'update'],
+			[['username', 'email', 'real_name', 'new_password', 'new_password_repeat'], 'required', 'on'=>'insert'],
+			[['username', 'email', 'real_name'], 'required', 'on'=>'update'],
+			[['username'], 'unique'],
+			[['burn_name'], 'safe'],
+			[['email'], 'email'],
+			[['new_password'], 'compare', 'compareAttribute' => 'new_password_repeat', 'on' => 'update'],
+			[['new_password_repeat'], 'compare', 'compareAttribute' => 'new_password', 'on' => 'update'],
         ];
     }
 
 	public function attributeLabels()
 	{
 		return  [
-			'real_name' => 'Burn Name',
+			'burn_name' => 'Burn Name',
+			'real_name' => 'Legal Name',
 		];
 	}
 
@@ -37,48 +42,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-		$result = (new \yii\db\Query())
-			->select('u.uid, u.name, u.mail, u.pass')
-		//	->select('u.uid, u.name, u.mail, u.pass, group_concat(r.name) as role_concat')
-			->from('users u')
-		//	->leftJoin('users_roles ur', 'ur.uid = u.uid')
-		//	->leftJoin('role r', 'r.rid = ur.rid')
-			->where('u.uid = :id', [':id' => $id])
-			->one(\Yii::$app->shared_db);
-
-		if($result)
-		{
-			$model = static::findOne($id);
-
-			if(!$model)
-			{
-				$model = new static();
-				$model->id = $result['uid'];
-				$model->email = $result['mail'];
-				$model->display_name = $result['name'];
-				$model->save();
-			}
-
-			$model->pass = $result['pass'];
-
-			return $model;
-		}	
-
-        return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+		return static::findOne($id);
     }
 
     /**
@@ -89,34 +53,90 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-		$result = (new \yii\db\Query())
-			->select('u.uid, u.name, u.pass, u.mail')
-			->from('users u')
-			//->leftJoin('users_roles ur', 'ur.uid = u.uid')
-			//->leftJoin('role r', 'r.rid = ur.rid')
-			->where('u.name = :name', [':name' => $username])
-			->one(\Yii::$app->shared_db);
+		$model = static::findOne(['username' => $username]);
 
-		if($result)
+		if($model)
 		{
-			$model = static::findOne($result['uid']);
-
-			if(!$model)
-			{
-				$model = new static();
-				$model->id = $result['uid'];
-				$model->email = $result['mail'];
-				$model->display_name = $result['name'];
-				$model->save();
-			}
-
-			$model->pass = $result['pass'];
-
 			return $model;
-		}	
+		}
 
-        return null;
+		return static::findOne(['email' => $username]);
     }
+    
+	/**
+     * Validates password
+     *
+     * @param  string  $password password to validate
+     * @return boolean if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+		return crypt($password, $this->password) === $this->password;
+    }
+
+	public function setPassword($password)
+	{
+		$this->password = $this->hashPassword($password);
+	}
+
+	public function hashPassword($password)
+	{
+		return crypt($password, $this->generateSalt());
+	}
+
+	protected function generateSalt($cost = 13)
+	{
+		if(!is_numeric($cost) || $cost < 4 || $cost > 31)
+		{
+			throw new Exception ("Salt cost must be between 4 and 31");
+		}
+
+		$r = [];
+		for($i = 0; $i < 8; $i++)
+		{
+			$r[] = pack('S', mt_rand(0, 0xffff));
+		}
+
+		$r[] = substr(microtime(), 2, 6);
+		$r = sha1(implode('', $r), true);
+		$salt = '$2a$' . sprintf('%02d', $cost) . '$';
+		$salt .= strtr(substr(base64_encode($r), 0, 22), ['+' => '.']);
+		
+		return $salt;
+	}
+
+	/**
+	 * Get the shift participation this user is a part of 
+	 */
+
+	public function getParticipation()
+	{
+		Participant::findAll(['user_id' => $this->uid]);
+	}
+
+	public function getRequirements()
+	{
+		return $this->hasMany(Requirement::className(), ['id' => 'requirement_id'])
+			->viaTable('user_requirement', ['user_id' => 'id']);
+	}
+
+	public function beforeSave()
+	{
+		if($this->isNewRecord || isset($this->new_password))
+		{
+			$this->password = $this->hashPassword($this->new_password);
+		}
+
+		$this->data = serialize($this->settings);
+
+		return true;
+	}
+
+	public function afterFind()
+	{
+		$this->settings = unserialize($this->data);
+	}
+
 
     /**
      * @inheritdoc
@@ -131,7 +151,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public function getAuthKey()
     {
-        return $this->authKey;
+		return $this->auth_key;
     }
 
     /**
@@ -139,26 +159,15 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
-    }
-    
-	/**
-     * Validates password
-     *
-     * @param  string  $password password to validate
-     * @return boolean if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-		return user_check_password($password, $this);
+		return $this->getAuthKey() === $authKey;
     }
 
-	/**
-	 * Get the shift participation this user is a part of 
-	 */
-
-	public function getParticipation()
+	public function generateAuthKey()
 	{
-		Participant::findAll(['user_id' => $this->uid]);
+		$this->auth_key = \Yii::$app->security->generateRandomString();
+	}
+
+	public static function findIdentityByAccessToken($token, $type = NULL)
+	{
 	}
 }

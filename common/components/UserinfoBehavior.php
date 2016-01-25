@@ -23,7 +23,7 @@ class UserinfoBehavior extends ActionFilter
 	{
 		$user = $this->user->identity;
 		if(empty($user->real_name) || 
-			empty($user->display_name) || 
+			empty($user->username) || 
 			empty($user->email))
 		{
 			//Redirect to fill out extra info

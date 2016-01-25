@@ -19,7 +19,7 @@ $config = [
 					'assignment' => [
 						'class' => 'yii2mod\rbac\controllers\AssignmentController',
 						'userClassName' => 'common\models\User',
-						'usernameField' => 'display_name',
+						'usernameField' => 'username',
 					]
 				]
 		],

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use common\models\User;
 
 /**
  * This is the model class for table "requirement".
@@ -41,4 +42,10 @@ class Requirement extends \yii\db\ActiveRecord
             'name' => 'Name',
         ];
     }
+
+	public function getUsers()
+	{
+		return $this->hasMany(User::className(), ['id' => 'user_id'])
+			->viaTable('user_requirement', ['requirement_id' => 'id']);
+	}
 }

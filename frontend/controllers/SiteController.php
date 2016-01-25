@@ -30,7 +30,7 @@ class SiteController extends Controller
         return [
 			'userinfo' => [
 				'class' => UserinfoBehavior::className(),
-				'except' => ['userinfo', 'login'],
+				'except' => ['userinfo', 'login', 'signup'],
 			],
             'access' => [
                 'class' => AccessControl::className(),

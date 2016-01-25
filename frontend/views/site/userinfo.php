@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 ?>
 <?php $form = ActiveForm::begin();?>
     <div class="form-group">
-		<?= $form->field($model, 'display_name')->textInput(); ?>
+		<?= $form->field($model, 'username')->textInput(); ?>
 		<p class="help-block">This will be displayed publically to other people on the volunteer site.</p>
     </div>
     <div class="form-group">
