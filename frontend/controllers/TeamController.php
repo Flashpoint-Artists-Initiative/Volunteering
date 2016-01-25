@@ -103,6 +103,30 @@ class TeamController extends Controller
 		]);
 	}
 
+	public function actionSchedule($id)
+	{
+		$team = $this->findModel($id);
+		$event = $team->event;
+
+		$start = new MDateTime($event->start, new \DateTimeZone('EST5EDT'));
+		$start->subToStart('D');
+
+		$days = [];
+
+		while($start->timestamp < $event->end)
+		{
+			$days[$start->timestamp] = $team->getDayDataProvider($start->timestamp);
+
+			$start->add(new \DateInterval('P1D'));
+		}
+
+		return $this->render('schedule', [
+			'event' => $event,
+			'team' => $team,
+			'days' => $days,
+		]);
+	}
+
 	protected function findModel($id)
     {
         if (($model = Team::findOne($id)) !== null) {

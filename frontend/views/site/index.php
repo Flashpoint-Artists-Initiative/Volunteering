@@ -20,6 +20,16 @@ $this->title = Yii::$app->params['siteTitle'];
 							'value' => function($model){return Html::a($model->name, ['team/view', 'id' => $model->id]);},
 						],
 						'status',
+						[
+							'label' => 'Actions',
+							'format' => 'raw',
+							'value' => function($model){
+								return sprintf("%s %s",
+									Html::a("Sign Up", ['/team/view', 'id' => $model->id], ['class' => 'btn btn-primary btn-xs']),
+									Html::a("View Schedule", ['/team/schedule', 'id' => $model->id], ['class' => 'btn btn-info btn-xs'])
+								);
+							},
+						],
 					],
 				]);
 				?>

@@ -62,7 +62,14 @@ $this->params['breadcrumbs'][] = $model->name;
 			],
 			'min_needed',
 			'max_needed',
-			'status',
+			'filled',
+			[
+				'attribute' => 'status',
+				'contentOptions' => function($model, $k, $i, $c)
+				{
+					return ['class' => $model->statusClass];
+				},
+			],
             [
 				'class' => 'yii\grid\ActionColumn',
 				'controller' => 'shift',

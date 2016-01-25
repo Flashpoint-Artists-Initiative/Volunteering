@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\helpers\Html;
 use common\models\Participant;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "shift".
@@ -68,6 +69,8 @@ class Shift extends \yii\db\ActiveRecord
             'participant_num' => 'Number of Participants',
             'active' => 'Active',
             'requirement_id' => 'User Requirement',
+			'volunteerList' => 'Volunteers',
+			'filled' => 'Spots Filled',
         ];
     }
 
@@ -301,5 +304,15 @@ class Shift extends \yii\db\ActiveRecord
 
 		Yii::$app->session->addFlash("error", "You must be signed up for a shift to be removed from it.");
 		return false;
+	}
+
+	public function getVolunteerList()
+	{
+		$output = [];
+		foreach($this->participants as $p)
+		{
+			$output[] = Html::encode($p->user->username);
+		}
+		return implode("<br>", $output);
 	}
 }
