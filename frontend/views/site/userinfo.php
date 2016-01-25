@@ -17,6 +17,11 @@ use yii\widgets\ActiveForm;
     </div>
 
     <div class="form-group">
+    	<?= $form->field($model, 'new_password')->passwordInput(); ?>
+    	<?= $form->field($model, 'new_password_repeat')->passwordInput(); ?>
+    </div>
+
+    <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-primary']) ?>
     </div>
 <?php ActiveForm::end();?>

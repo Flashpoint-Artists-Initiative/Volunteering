@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\Shift;
 use common\models\ShiftSearch;
+use common\models\Requirement;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -88,7 +89,9 @@ class ShiftController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+			$requirements = Requirement::find()->orderBy('name ASC')->all();
             return $this->render('update', [
+				'requirements' => $requirements,
                 'model' => $model,
             ]);
         }

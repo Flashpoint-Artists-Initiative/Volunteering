@@ -12,6 +12,8 @@ class m160121_194845_add_password_and_burn_name_to_user extends Migration
 			'username' => $this->string()->notNull(),
 			'password' => $this->string()->notNull(),
 			'auth_key' => $this->string(),
+			'password_reset_token' => $this->string(),
+			'status' => $this->integer(),
 			'email' => $this->string()->notNull(),
 			'real_name' => $this->string()->notNull(),
 			'burn_name' => $this->string(),

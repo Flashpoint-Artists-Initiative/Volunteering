@@ -67,7 +67,7 @@ class Shift extends \yii\db\ActiveRecord
 			'max_needed' => 'Maximum Volunteers Needed',
             'participant_num' => 'Number of Participants',
             'active' => 'Active',
-            'requirement_id' => 'Requirement ID',
+            'requirement_id' => 'User Requirement',
         ];
     }
 

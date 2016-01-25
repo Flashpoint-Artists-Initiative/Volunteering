@@ -28,10 +28,6 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-			'userinfo' => [
-				'class' => UserinfoBehavior::className(),
-				'except' => ['userinfo', 'login', 'signup'],
-			],
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout', 'signup', 'index'],

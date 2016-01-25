@@ -48,4 +48,11 @@ class Requirement extends \yii\db\ActiveRecord
 		return $this->hasMany(User::className(), ['id' => 'user_id'])
 			->viaTable('user_requirement', ['requirement_id' => 'id']);
 	}
+
+	public function check($user_id)
+	{
+		return $this->getUsers()
+			->where(['id' => $user_id])
+			->count() > 0;
+	}
 }

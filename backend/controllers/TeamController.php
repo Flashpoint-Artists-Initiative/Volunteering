@@ -7,6 +7,7 @@ use common\models\Team;
 use common\models\Event;
 use common\models\Shift;
 use common\models\TeamSearch;
+use common\models\Requirement;
 use common\components\MDateTime;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -96,11 +97,14 @@ class TeamController extends Controller
 			$shift->save();
 		}
 
+		$requirements = Requirement::find()->orderBy('name ASC')->all();
+
         return $this->render('view', [
             'model' => $model,
 			'shift' => $shift,
 			'dataProvider' => $dp,
 			'days' => $days,
+			'requirements' => $requirements,
         ]);
     }
 

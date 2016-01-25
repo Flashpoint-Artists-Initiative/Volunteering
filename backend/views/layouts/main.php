@@ -26,7 +26,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => 'Alchemy Volunteer System',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -52,6 +52,7 @@ AppAsset::register($this);
 				$eventItems[] = ['label' => 'Admin Events', 'url' => ['/event/admin']];
 
 				$adminItems['items'][] = ['label' => 'Auth', 'url' => ['/rbac']];
+				$adminItems['items'][] = ['label' => 'Requirements', 'url' => ['/requirement']];
 			}
 
             echo Nav::widget([

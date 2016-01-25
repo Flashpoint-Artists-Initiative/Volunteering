@@ -7,6 +7,9 @@ use common\models\Requirement;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
+	const STATUS_ACTIVE = 10;
+	const STATUS_DELETED = 0;
+
 	public $new_password;
 	public $new_password_repeat;
 	public $settings;
@@ -21,11 +24,13 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         return [
 			[['username', 'email', 'real_name', 'new_password', 'new_password_repeat'], 'required', 'on'=>'insert'],
 			[['username', 'email', 'real_name'], 'required', 'on'=>'update'],
-			[['username'], 'unique'],
-			[['burn_name'], 'safe'],
-			[['email'], 'email'],
-			[['new_password'], 'compare', 'compareAttribute' => 'new_password_repeat', 'on' => 'update'],
-			[['new_password_repeat'], 'compare', 'compareAttribute' => 'new_password', 'on' => 'update'],
+			['username', 'unique'],
+			['burn_name', 'safe'],
+			['email', 'email'],
+			['new_password', 'compare', 'compareAttribute' => 'new_password_repeat', 'on' => 'update'],
+			['new_password_repeat', 'compare', 'compareAttribute' => 'new_password', 'on' => 'update'],
+			['status', 'default', 'value' => self::STATUS_ACTIVE],
+			['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }
 
@@ -34,6 +39,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 		return  [
 			'burn_name' => 'Burn Name',
 			'real_name' => 'Legal Name',
+			'new_password_repeat' => 'Confirm new password',
 		];
 	}
 
@@ -62,6 +68,29 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 		return static::findOne(['email' => $username]);
     }
+
+	public static function findByPasswordResetToken($token)
+	{
+		if (!static::isPasswordResetTokenValid($token)) {
+			return null;
+		}
+
+		return static::findOne([
+			'password_reset_token' => $token,
+			'status' => self::STATUS_ACTIVE,
+		]);
+	}
+
+	public static function isPasswordResetTokenValid($token)
+	{
+		if (empty($token)) {
+			return false;
+		}
+
+		$timestamp = (int) substr($token, strrpos($token, '_') + 1);
+		$expire = Yii::$app->params['user.passwordResetTokenExpire'];
+		return $timestamp + $expire >= time();
+	}
     
 	/**
      * Validates password
@@ -169,5 +198,15 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 	public static function findIdentityByAccessToken($token, $type = NULL)
 	{
+	}
+
+	public function generatePasswordResetToken()
+	{
+		$this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+	}
+
+	public function removePasswordResetToken()
+	{
+		$this->password_reset_token = null;
 	}
 }

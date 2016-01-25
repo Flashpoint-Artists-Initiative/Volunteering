@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\datetime\DateTimePicker;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Shift */
@@ -32,7 +33,7 @@ use kartik\datetime\DateTimePicker;
 
     <?= $form->field($model, 'active')->checkbox() ?>
 
-    <?= $form->field($model, 'requirement_id')->textInput() ?>
+	<?= $form->field($model, 'requirement_id')->dropDownList(ArrayHelper::map($requirements, 'id', 'name'), ['prompt' => 'N/A']);?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

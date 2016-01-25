@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 //use kartik\widgets\ActiveForm;
 use kartik\datetime\DateTimePicker;
 
@@ -93,7 +94,7 @@ $this->params['breadcrumbs'][] = $model->name;
 
     <?= $form->field($shift, 'active')->checkbox() ?>
 
-    <?= $form->field($shift, 'requirement_id')->textInput() ?>
+	<?= $form->field($shift, 'requirement_id')->dropDownList(ArrayHelper::map($requirements, 'id', 'name'), ['prompt' => 'N/A']);?>
 
     <div class="form-group">
         <?= Html::submitButton('Create Shift', ['class' => 'btn btn-success']) ?>

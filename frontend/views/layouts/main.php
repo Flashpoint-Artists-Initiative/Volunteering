@@ -41,7 +41,7 @@ AppAsset::register($this);
 	$leftItems = [];
 
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = "<li>" . Html::a('Signup', "http://alchemyburn.com/user/register", ["target" => "_blank"]) . "</li>";
+        $menuItems[] = ['label' => 'Sign up', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
 		$leftItems[] = [
