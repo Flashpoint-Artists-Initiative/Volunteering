@@ -22,7 +22,13 @@ use yii\helpers\Html;
 				return sprintf("%s - %s (%u hours)", $start, $end, $model->length);
 			},
 		],
-		'status',
+		[
+			'attribute' => 'status',
+			'contentOptions' => function($model, $k, $i, $c)
+			{
+				return ['class' => $model->statusClass];
+			},
+		],
 		[
 			'label' => 'Signup',
 			'format' => 'raw',

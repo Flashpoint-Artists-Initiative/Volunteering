@@ -73,6 +73,7 @@ class TeamController extends Controller
 			'query' => Team::find()->where(['event_id' => Yii::$app->params['currentEvent']]),
 			'pagination' => false,
 		]);
+
         return $this->render('index', [
 			'teams' => $dp,
 		]);
@@ -90,17 +91,7 @@ class TeamController extends Controller
 
 		while($start->timestamp < $event->end)
 		{
-			$days[$start->timestamp] = new ActiveDataProvider([
-				'query' => Shift::find()->where(
-					"team_id = :id AND active = true AND start_time BETWEEN :start AND :end",
-					[':id' => $team->id, ':start' => $start->timestamp, ':end' => $start->timestamp + 86400]),
-				'pagination' => false,
-				'sort' => [
-					'defaultOrder' => [
-						'start_time' => SORT_ASC,
-					],
-				],
-			]);
+			$days[$start->timestamp] = $team->getDayDataProvider($start->timestamp);
 
 			$start->add(new \DateInterval('P1D'));
 		}

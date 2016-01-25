@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use common\models\Shift;
+use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "team".
@@ -150,5 +153,40 @@ class Team extends \yii\db\ActiveRecord
 			$extra_remaining,
 			$extra_plural
 		);
+	}
+
+	public function getDayDataProvider($start)
+	{
+		$query = Shift::find();
+		$query->groupBy = 'shift.id';
+
+		return new ActiveDataProvider([
+			'query' => $query
+			->addSelect([new Expression("*, concat(
+					greatest(least(coalesce(min_needed, 1), coalesce(max_needed, 1)) - count(participant.user_id), 0),
+					'.',
+					greatest(greatest(coalesce(min_needed, 1), coalesce(max_needed, 1)) 
+						- least(coalesce(min_needed, 1), coalesce(max_needed, 1))
+						- greatest((count(participant.user_id) - least(coalesce(min_needed, 1), coalesce(max_needed, 1))), 0),0)
+				) as status")])
+			->joinWith('participants')
+			->where(
+				"team_id = :id AND active = true AND start_time BETWEEN :start AND :end",
+				[':id' => $this->id, ':start' => $start, ':end' => $start + 86400]),
+			'pagination' => false,
+			'sort' => [
+				'defaultOrder' => [
+					'start_time' => SORT_ASC,
+				],
+				'attributes' => [
+					'status' => [
+						'asc' => ['status' => SORT_ASC],
+						'desc' => ['status' => SORT_DESC],
+					],
+					'title',
+					'start_time',
+				],
+			],
+		]);
 	}
 }

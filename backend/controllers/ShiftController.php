@@ -85,6 +85,13 @@ class ShiftController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+		
+		if(!$model->team->event->active)
+		{
+			Yii::$app->session->addFlash('error', 'Shifts can not be updated once an event is closed');
+			Yii::$app->user->setReturnUrl(Yii::$app->request->referrer);
+			return $this->goBack();
+		}
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

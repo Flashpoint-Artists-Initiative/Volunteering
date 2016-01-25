@@ -56,7 +56,12 @@ class ShiftController extends Controller
 
 		$shift->addParticipant($uid);
 
-		$this->redirect(Yii::$app->request->referrer);
+		if(isset(Yii::$app->request->referrer))
+		{
+			return $this->redirect(Yii::$app->request->referrer);
+		}
+
+		return $this->redirect(['/site/index']);
 		//$this->redirect(['team/view', 'id' => $shift->team_id]);
 	}
 
@@ -71,7 +76,12 @@ class ShiftController extends Controller
 
 		$shift->removeParticipant($uid);
 
-		$this->redirect(Yii::$app->request->referrer);
+		if(isset(Yii::$app->request->referrer))
+		{
+			return $this->redirect(Yii::$app->request->referrer);
+		}
+
+		return $this->redirect(['/site/index']);
 		//$this->redirect(['team/view', 'id' => $shift->team_id]);
 	}
 

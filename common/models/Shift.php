@@ -176,6 +176,25 @@ class Shift extends \yii\db\ActiveRecord
 		return "Filled";
 	}
 
+	public function getStatusClass()
+	{
+		if($this->filled === 0)
+		{
+			return 'danger';
+		}
+		if($this->filled < $this->minSpots)
+		{
+				return 'warning';
+		}
+
+		if($this->remainingSpots > 0)
+		{
+			return 'info';
+		}
+
+		return 'success';
+	}
+
 	protected function hasParticipant($user_id)
 	{
 		foreach($this->participants as $participant)
@@ -255,8 +274,8 @@ class Shift extends \yii\db\ActiveRecord
 
 		if($participant->save())
 		{
-			Yii::$app->session->addFlash("success", sprintf("You are now signed up for the '%s' shift on %s", 
-				$this->title, date("M j \a\t g:i a", $this->start_time)));
+			Yii::$app->session->addFlash("success", sprintf("You are now signed up for the %s '%s' shift on %s", 
+				$this->team->name, $this->title, date("M j \a\t g:i a", $this->start_time)));
 			return true;
 		}
 
@@ -273,8 +292,8 @@ class Shift extends \yii\db\ActiveRecord
 				if($p->user_id == $user_id)
 				{
 					$p->delete();
-					Yii::$app->session->addFlash("success", sprintf("You have been removed from the '%s' shift on %s", 
-						$this->title, date("M j \a\t g:i a", $this->start_time)));
+					Yii::$app->session->addFlash("success", sprintf("You have been removed from the %s '%s' shift on %s", 
+						$this->team->name, $this->title, date("M j \a\t g:i a", $this->start_time)));
 					return true;
 				}
 			}

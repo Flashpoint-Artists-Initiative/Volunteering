@@ -68,17 +68,7 @@ class TeamController extends Controller
 
 		while($start->timestamp < $event->end)
 		{
-			$days[$start->timestamp] = new ActiveDataProvider([
-				'query' => Shift::find()->where(
-					"team_id = :id AND active = true AND start_time BETWEEN :start AND :end",
-					[':id' => $model->id, ':start' => $start->timestamp, ':end' => $start->timestamp + 86400]),
-				'pagination' => false,
-				'sort' => [
-					'defaultOrder' => [
-						'start_time' => SORT_ASC,
-					],
-				],
-			]);
+			$days[$start->timestamp] = $model->getDayDataProvider($start->timestamp);
 
 			$start->add(new \DateInterval('P1D'));
 		}
@@ -98,10 +88,12 @@ class TeamController extends Controller
 		}
 
 		$requirements = Requirement::find()->orderBy('name ASC')->all();
+		$event = $model->event;
 
         return $this->render('view', [
             'model' => $model,
 			'shift' => $shift,
+			'event' => $event,
 			'dataProvider' => $dp,
 			'days' => $days,
 			'requirements' => $requirements,
@@ -138,6 +130,13 @@ class TeamController extends Controller
     {
         $model = $this->findModel($id);
 		$events = Event::findAll(['active' => true]);
+
+		if(!$model->event->active)
+		{
+			Yii::$app->session->addFlash('error', 'Teams can not be updated once an event is closed');
+			Yii::$app->user->setReturnUrl(Yii::$app->request->referrer);
+			return $this->goBack();
+		}
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

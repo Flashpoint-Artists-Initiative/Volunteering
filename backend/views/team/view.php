@@ -66,12 +66,14 @@ $this->params['breadcrumbs'][] = $model->name;
             [
 				'class' => 'yii\grid\ActionColumn',
 				'controller' => 'shift',
+				'template' => $event->active ? '{view} {update} {delete}' : '{view}',
 			],
 		],
 	]);?>
 	<?php endforeach;?>
 	
 	<h2>Add New Shift</h2>
+	<?php if($event->active):?>
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($shift, 'title')->textInput(['maxlength' => 255]) ?>
 
@@ -101,5 +103,8 @@ $this->params['breadcrumbs'][] = $model->name;
     </div>
 
     <?php ActiveForm::end(); ?>
+	<?php else:?>
+	<p>The event has been closed, new shifts can not be added.</p>
+	<?php endif;?>
 
 </div>
