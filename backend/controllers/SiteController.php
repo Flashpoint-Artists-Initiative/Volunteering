@@ -17,7 +17,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-				'except' => ['login', 'userinfo'],
+				'except' => ['login', 'userinfo', 'logout', 'forbidden'],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -68,6 +68,11 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+	public function actionForbidden()
+	{
+		return $this->render('forbidden');
+	}
 
     public function actionContact()
     {

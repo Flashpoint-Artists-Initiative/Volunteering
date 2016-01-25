@@ -18,9 +18,36 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Event', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+	
+	<h3>Active Events</h3>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
+        'dataProvider' => $activeEvents,
+		'filterPosition' => false,
+        'columns' => [
+			[
+				'format' => 'raw',
+				'attribute' => 'name',
+				'value' => function($data){
+					return Html::a(Html::encode($data->name), ['/event/view', 'id' => $data->id]);
+				},
+			],
+			[
+            	'attribute' => 'start',
+				'value' => 'formStart',
+			],
+			[
+            	'attribute' => 'end',
+				'value' => 'formEnd',
+			],
+			'duration',
+        ],
+    ]); ?>
+
+	<h3>Inactive Events</h3>
+
+    <?= GridView::widget([
+        'dataProvider' => $inactiveEvents,
 		'filterPosition' => false,
         'columns' => [
 			[

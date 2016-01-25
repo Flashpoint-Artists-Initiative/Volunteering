@@ -100,38 +100,14 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-		return crypt($password, $this->password) === $this->password;
+		//return crypt($password, $this->password) === $this->password;
+		return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
 	public function setPassword($password)
 	{
-		$this->password = $this->hashPassword($password);
-	}
-
-	public function hashPassword($password)
-	{
-		return crypt($password, $this->generateSalt());
-	}
-
-	protected function generateSalt($cost = 13)
-	{
-		if(!is_numeric($cost) || $cost < 4 || $cost > 31)
-		{
-			throw new Exception ("Salt cost must be between 4 and 31");
-		}
-
-		$r = [];
-		for($i = 0; $i < 8; $i++)
-		{
-			$r[] = pack('S', mt_rand(0, 0xffff));
-		}
-
-		$r[] = substr(microtime(), 2, 6);
-		$r = sha1(implode('', $r), true);
-		$salt = '$2a$' . sprintf('%02d', $cost) . '$';
-		$salt .= strtr(substr(base64_encode($r), 0, 22), ['+' => '.']);
-		
-		return $salt;
+		//$this->password = $this->hashPassword($password);
+		$this->password = Yii::$app->getSecurity()->generatePasswordHash($password);
 	}
 
 	/**
@@ -151,11 +127,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 	public function beforeSave()
 	{
-		if($this->isNewRecord || isset($this->new_password))
-		{
-			$this->password = $this->hashPassword($this->new_password);
-		}
-
 		$this->data = serialize($this->settings);
 
 		return true;

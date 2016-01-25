@@ -38,13 +38,18 @@ class EventController extends Controller
      */
     public function actionIndex()
     {
-		$dataProvider = new \yii\data\ActiveDataProvider([
+		$active = new \yii\data\ActiveDataProvider([
 			'query' => Event::find()->where(['active' => true]),
 			'pagination' => false,
 		]);
 
+		$inactive = new \yii\data\ActiveDataProvider([
+			'query' => Event::find()->where(['active' => false]),
+		]);
+
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+			'activeEvents' => $active,
+			'inactiveEvents' => $inactive,
         ]);
     }
 

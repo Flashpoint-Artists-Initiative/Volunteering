@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-	<p>Login or <?= Html::a('create an account', ['site/signup']);?></p>
+	<p>Login or <?= Html::a('create an account', ['site/signup']);?> to sign up for volunteer shifts.</p>
     <p><strong>Note</strong> This is not the same as your old Alchemy/Euphoria website login details.</p>
 
     <div class="row">
