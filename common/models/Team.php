@@ -155,6 +155,38 @@ class Team extends \yii\db\ActiveRecord
 		);
 	}
 
+	public function getStatusClass()
+	{
+		$min_remaining = $extra_remaining = $filled = 0;
+		foreach($this->shifts as $shift)
+		{
+			$filled += $shift->filled;
+			$shift_filled = min($shift->filled, $shift->minSpots); 
+
+			$min_remaining += $shift->minSpots - $shift_filled;
+
+			$extra_filled = $shift->filled - $filled;
+			$extra_remaining += $shift->maxSpots - $shift->minSpots - $extra_filled;
+		}
+
+		if($filled === 0)
+		{
+			return "danger";
+		}
+
+		if($min_remaining <= 0 && $extra_remaining <= 0)
+		{
+			return "success"; 
+		}
+
+		if($min_remaining <= 0 && $extra_remaining > 0)
+		{
+			return "info";
+		}
+
+		return "warning";
+	}
+
 	public function getDayDataProvider($start)
 	{
 		$query = Shift::find();

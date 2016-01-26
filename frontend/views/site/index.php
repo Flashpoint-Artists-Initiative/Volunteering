@@ -19,7 +19,13 @@ $this->title = Yii::$app->params['siteTitle'];
 							'format' => 'raw',
 							'value' => function($model){return Html::a($model->name, ['team/view', 'id' => $model->id]);},
 						],
-						'status',
+						[
+							'attribute' => 'status',
+							'contentOptions' => function($model, $k, $i, $c)
+							{
+								return ['class' => $model->statusClass];
+							},
+						],
 						[
 							'label' => 'Actions',
 							'format' => 'raw',
