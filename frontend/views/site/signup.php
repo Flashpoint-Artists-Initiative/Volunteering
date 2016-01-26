@@ -23,11 +23,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
-                <?= $form->field($model, 'real_name') ?>
+				<div class="form-group">
+					<?= $form->field($model, 'real_name')->textInput(); ?>
+					<p class="help-block">Please use your full legal name.  This will not be shared with anyone except team leads, and will only be used in emergencies.</p>
+				</div>
 
-                <?= $form->field($model, 'burn_name') ?>
+				<div class="form-group">
+					<?= $form->field($model, 'burn_name')->textInput(); ?>
+					<p class="help-block">Optional. What you want to be called during the event.  Your Legal name will be used if blank.</p> 
+				</div>
 
-                <?= $form->field($model, 'email') ?>
+				<div class="form-group">
+					<?= $form->field($model, 'email')->textInput(); ?>
+					<p class="help-block">Make sure your email address is correct so the team leads can contact you about your shifts.</p>
+				</div>
 
 
                 <div class="form-group">

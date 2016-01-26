@@ -127,6 +127,10 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 	public function beforeSave()
 	{
+		if(!$this->isNewRecord && isset($this->new_password))
+		{
+			$this->setPassword($this->new_password);
+		}
 		$this->data = serialize($this->settings);
 
 		return true;
