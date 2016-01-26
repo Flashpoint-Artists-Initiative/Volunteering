@@ -133,7 +133,7 @@ class EventController extends Controller
         return $this->redirect(['index']);
     }
 
-	public function actionClone($id)
+	public function actionCopy($id)
 	{
 		$old_event = $this->findModel($id);
 

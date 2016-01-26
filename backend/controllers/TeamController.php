@@ -14,6 +14,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii2mod\rbac\components\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use backend\models\TeamCopyForm;
 
 /**
  * TeamController implements the CRUD actions for Team model.
@@ -105,9 +108,10 @@ class TeamController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($event_id = null)
     {
         $model = new Team();
+		$model->event_id = $event_id;
 		$events = Event::findAll(['active' => true]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -160,6 +164,28 @@ class TeamController extends Controller
 
         return $this->redirect(['index']);
     }
+
+	public function actionCopy($id = null, $event_id = null)
+	{
+		$model = new TeamCopyForm();
+		$model->team_id = $id;
+		$model->event_id = $event_id;
+
+        if ($model->load(Yii::$app->request->post()))
+		{
+			$new_id = $model->copy();
+        	return $this->redirect(['update', 'id' => $new_id]);
+        } else {
+            return $this->render('copy', [
+                'model' => $model,
+            ]);
+        }
+	}
+
+	public function actionDoCopy($id, $event_id)
+	{
+
+	}
 
     /**
      * Finds the Team model based on its primary key value.

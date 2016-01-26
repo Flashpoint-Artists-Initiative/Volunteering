@@ -9,6 +9,8 @@ use common\models\LoginForm;
 use common\models\ContactForm;
 use common\models\Event;
 use yii2mod\rbac\components\AccessControl;
+use yii\data\ActiveDataProvider;
+use common\models\Team;
 
 class SiteController extends Controller
 {
@@ -43,7 +45,15 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+		$event = $this->loadEvent(Yii::$app->params['currentEvent']);
+		$dp = new ActiveDataProvider([
+			'query' => Team::find()->where(['event_id' => Yii::$app->params['currentEvent']]),
+			'pagination' => false,
+		]);
+        return $this->render('index', [
+			'event' => $event,
+			'teams' => $dp,
+		]);
     }
 
     public function actionLogin()
@@ -69,27 +79,12 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-	public function actionForbidden()
-	{
-		return $this->render('forbidden');
-	}
-
-    public function actionContact()
+    protected function loadEvent($id)
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
+        if (($model = Event::findOne($id)) !== null) {
+            return $model;
         } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 }

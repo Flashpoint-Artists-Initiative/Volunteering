@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use common\models\Shift;
+use common\models\Event;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 
@@ -220,5 +221,32 @@ class Team extends \yii\db\ActiveRecord
 				],
 			],
 		]);
+	}
+
+	public function copyToEvent($event_id)
+	{
+		$old_event = $this->event;
+		$new_event = Event::findOne($event_id);
+
+		$time_diff = ($new_event->start - $old_event->start) - floor(($new_event->start - $old_event->start) / (60*60*24));
+
+		$new_team = new Team();
+		$new_team->attributes = $this->attributes;
+		$new_team->name = "Copy of " . $this->name;
+		$new_team->event_id = $event_id;
+		$new_team->save();
+
+		//Copy shifts
+		$old_shifts = $this->shifts;
+		foreach($old_shifts as $old_shift)
+		{
+			$new_shift = new Shift();
+			$new_shift->attributes = $old_shift->attributes;
+			$new_shift->team_id = $new_team->id;
+			$new_shift->start_time += $time_diff;
+			$new_shift->save();
+		}
+
+		return $new_team->id;
 	}
 }

@@ -23,6 +23,8 @@ class Event extends \yii\db\ActiveRecord
 
 	private $dateValidationFlag = false;
 
+	protected $_teams;
+
     /**
      * @inheritdoc
      */
@@ -116,13 +118,50 @@ class Event extends \yii\db\ActiveRecord
 		return $diff->format("%d days, %h hours");
 	}
 
-	public function getTeams()
+	public function getTeams($reset = false)
 	{
-		return $this->hasMany(Team::className(), ['event_id' => 'id']);
+		if($reset || !isset($this->_teams))
+		{
+			$this->_teams = $this->hasMany(Team::className(), ['event_id' => 'id']);
+		}
+		return $this->_teams;
 	}
 
 	public function getDropdownName()
 	{
 		return sprintf("%s (%s)", $this->name, date("M Y", $this->start));
+	}
+
+	public function getMinTotalShifts()
+	{
+		$sum = 0;
+		foreach($this->teams as $team)
+		{
+			$sum += $team->minTotalShifts;
+		}
+
+		return $sum;
+	}
+
+	public function getMaxTotalShifts()
+	{
+		$sum = 0;
+		foreach($this->teams as $team)
+		{
+			$sum += $team->maxTotalShifts;
+		}
+
+		return $sum;
+	}
+
+	public function getFilledShifts()
+	{
+		$sum = 0;
+		foreach($this->teams as $team)
+		{
+			$sum += $team->filledShifts;
+		}
+
+		return $sum;
 	}
 }
