@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
  * @property integer $id
  * @property integer $team_id
  * @property string $title
- * @property integer $length
+ * @property float $length
  * @property integer $start_time
  * @property integer $active
  * @property integer $requirement_id
@@ -46,7 +46,8 @@ class Shift extends \yii\db\ActiveRecord
     {
         return [
             [['team_id', 'title', 'length'], 'required'],
-            [['team_id', 'length', 'start_time', 'active', 'requirement_id', 'min_needed', 'max_needed'], 'integer'],
+            [['team_id', 'start_time', 'active', 'requirement_id', 'min_needed', 'max_needed'], 'integer'],
+			['length', 'number'],
             [['title'], 'string', 'max' => 255],
 			['formStart', 'date', 'timestampAttribute' => 'start_time', 'format' => 'php:' . self::DATE_FORMAT],
         ];
