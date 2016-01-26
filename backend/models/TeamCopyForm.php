@@ -8,6 +8,7 @@ use common\models\Team;
 use common\models\Event;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\NotFoundHttpException;
 
 /**
  * LoginForm is the model behind the login form.

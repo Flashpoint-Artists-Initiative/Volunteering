@@ -67,4 +67,14 @@ class Participant extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Shift::className(), ['id' => 'shift_id']);
 	}
+
+	public function beforeDelete()
+	{
+		if(!$this->shift->team->event->active)
+		{
+			return false;
+		}
+
+		return true;
+	}
 }

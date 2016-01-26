@@ -39,12 +39,12 @@ class EventController extends Controller
     public function actionIndex()
     {
 		$active = new \yii\data\ActiveDataProvider([
-			'query' => Event::find()->where(['active' => true]),
+			'query' => Event::find()->addOrderBy('start DESC')->where(['active' => true]),
 			'pagination' => false,
 		]);
 
 		$inactive = new \yii\data\ActiveDataProvider([
-			'query' => Event::find()->where(['active' => false]),
+			'query' => Event::find()->addOrderBy('start DESC')->where(['active' => false]),
 		]);
 
         return $this->render('index', [
@@ -72,13 +72,14 @@ class EventController extends Controller
      */
     public function actionView($id)
     {
+		$event = $this->findModel($id);
 		$dp = new ActiveDataProvider([
-			'query' => Team::find()->where(['event_id' => $id]),
+			'query' => Team::find()->where(['event_id' => $id]), 
 			'pagination' => false,
 		]);
 
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $event,
 			'dataProvider' => $dp,
         ]);
     }
@@ -128,8 +129,12 @@ class EventController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+		$model = $this->findModel($id);
+		if($model->delete() !== false)
+		{
+			Yii::$app->session->addFlash('success', 'Event deleted.');
+		}
+			
         return $this->redirect(['index']);
     }
 

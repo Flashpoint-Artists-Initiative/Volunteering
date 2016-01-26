@@ -315,4 +315,23 @@ class Shift extends \yii\db\ActiveRecord
 		}
 		return implode("<br>", $output);
 	}
+
+	public function beforeDelete()
+	{
+		if(!$this->team->event->active)
+		{
+			Yii::$app->session->addFlash('error', 'Shifts cannot be deleted once an event is closed');
+			return false;
+		}
+
+		foreach($this->participants as $p)
+		{
+			if(!$p->delete())
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

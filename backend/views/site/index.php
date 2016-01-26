@@ -9,9 +9,8 @@ $this->title = Yii::$app->params['siteTitle'];
     <div class="body-content">
 		<div class="row">
 			<div class="col-lg-12">
-				<h1>Current Event: <?php echo Html::encode($event->name);?></h1>
-				<h3><?= sprintf("%d shifts filled out of %d minimum, %d maximum", 
-					$event->filledShifts, $event->minTotalShifts, $event->maxTotalShifts);?></h3>
+				<h1>Current Event: <?php echo Html::a($event->name, ['/event/view', 'id' => $event->id]);?></h1>
+				<h3><?= $event->shiftSummary;?></h3>
 				<?php echo GridView::widget([
 					'dataProvider' => $teams,
 					'layout' => '{items}',

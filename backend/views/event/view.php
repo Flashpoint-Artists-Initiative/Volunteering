@@ -30,23 +30,35 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'name',
-            'start',
-            'end',
-            'active',
+            'start:datetime',
+            'end:datetime',
+            'active:boolean',
+			'shiftSummary',
         ],
     ]) ?>
 	
 	<?= GridView::widget([
 		'dataProvider' => $dataProvider,
+		'layout' => '{items}',
 		'columns' => [
 			[
 				'attribute' => 'name',
 				'format' => 'raw',
-				'value' => function($data){return Html::a(Html::encode($data->name), ['/team/view', 'id' => $data->id]);},
+				'value' => function($model){return Html::a($model->name, ['team/view', 'id' => $model->id]);},
+			],
+			'minTotalShifts',
+			'maxTotalShifts',
+			'filledShifts',
+			[
+				'attribute' => 'status',
+				'contentOptions' => function($model, $k, $i, $c)
+				{
+					return ['class' => $model->statusClass];
+				},
 			],
 		],
 	]);?>
 
+			<?= Html::a("Add new Team", ['/team/create', 'event_id' => $model->id], ['class' => 'btn btn-success']);?>
+			<?= Html::a("Copy Team from Previous Event", ['/team/copy', 'event_id' => $model->id], ['class' => 'btn btn-primary']);?>
 </div>

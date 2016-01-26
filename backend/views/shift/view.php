@@ -7,8 +7,10 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Shift */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Shifts', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => 'Events', 'url' => ['/event/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->event->name, 'url' => ['/event/view', 'id' => $model->event->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->team->name, 'url' => ['/team/view', 'id' => $model->team->id]];
+$this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_time);
 ?>
 <div class="shift-view">
 

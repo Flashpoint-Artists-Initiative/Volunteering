@@ -29,23 +29,22 @@ $this->params['breadcrumbs'][] = $model->name;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Add Shift', '#add-shift', ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Import Shifts', ['import', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
     </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'description:ntext',
             'contact',
-			[
-            	'label' => 'Event Name',
-				'value' => $model->event->name,
-			],
+			'statusSummary',
         ],
     ]) ?>
 
+	<h3>Shifts</h3>
 	<?php foreach($days as $timestamp => $dp):?>
-	<h3><?php echo date('l, M j, Y', $timestamp);?></h3>
+	<h4><?php echo date('l, M j, Y', $timestamp);?></h4>
 	<?php echo GridView::widget([
 		'dataProvider' => $dp,
 		'columns' => [
@@ -79,6 +78,7 @@ $this->params['breadcrumbs'][] = $model->name;
 	]);?>
 	<?php endforeach;?>
 	
+	<a name="add-shift"></a>
 	<h2>Add New Shift</h2>
 	<?php if($event->active):?>
     <?php $form = ActiveForm::begin(); ?>

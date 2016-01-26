@@ -112,9 +112,13 @@ class ShiftController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+		$model = $this->findModel($id);
+		if($model->delete() !== false)
+		{
+			Yii::$app->session->addFlash('success', 'Shift deleted.');
+		}
+			
+		return $this->redirect(['/team/view', 'id' => $model->team_id]);
     }
 
     /**

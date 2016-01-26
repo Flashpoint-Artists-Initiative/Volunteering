@@ -84,6 +84,7 @@ class Event extends \yii\db\ActiveRecord
 			'formStart' => 'Start',
 			'formEnd' => 'End',
             'active' => 'Active',
+			'shiftSummary' => 'Summary',
         ];
     }
 
@@ -163,5 +164,30 @@ class Event extends \yii\db\ActiveRecord
 		}
 
 		return $sum;
+	}
+
+	public function getShiftSummary()
+	{
+		return sprintf("%d shifts filled out of %d minimum, %d maximum",
+			$this->filledShifts, $this->minTotalShifts, $this->maxTotalShifts);
+	}
+
+	public function beforeDelete()
+	{
+		if(!$this->active)
+		{
+			Yii::$app->session->addFlash('error', 'Cannot delete an inactive event');
+			return false;
+		}
+
+		foreach($this->teams as $team)
+		{
+			if(!$team->delete())
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

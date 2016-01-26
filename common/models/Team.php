@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use common\models\Shift;
 use common\models\Event;
+use common\models\Requirement;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 
@@ -50,9 +51,10 @@ class Team extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'description' => 'Description',
-            'contact' => 'Team Contact',
+            'contact' => 'Contact Address',
             'event_id' => 'Event',
 			'name' => 'Team Name',
+			'statusSummary' => 'Status',
         ];
     }
 
@@ -109,10 +111,23 @@ class Team extends \yii\db\ActiveRecord
 		return $sum;
 	}
 
+	public function getStatusSummary()
+	{
+		$filled = $min_needed = $max_needed = 0;
+		foreach($this->shifts as $shift)
+		{
+			$filled += $shift->filled;
+			$min_needed += $shift->minSpots;
+			$max_needed += $shift->maxSpots;
+		}
+
+		return sprintf("%d shifts filled out of %d minimum, %d maximum",
+			$filled, $min_needed, $max_needed);
+	}
+
 	public function getStatus()
 	{
 		$min_remaining = $extra_remaining = 0;
-		$unlimited = false;
 		foreach($this->shifts as $shift)
 		{
 			$filled = min($shift->filled, $shift->minSpots); 
@@ -170,10 +185,6 @@ class Team extends \yii\db\ActiveRecord
 			$extra_remaining += $shift->maxSpots - $shift->minSpots - $extra_filled;
 		}
 
-		if($filled === 0)
-		{
-			return "danger";
-		}
 
 		if($min_remaining <= 0 && $extra_remaining <= 0)
 		{
@@ -183,6 +194,11 @@ class Team extends \yii\db\ActiveRecord
 		if($min_remaining <= 0 && $extra_remaining > 0)
 		{
 			return "info";
+		}
+
+		if($filled === 0)
+		{
+			return "danger";
 		}
 
 		return "warning";
@@ -248,5 +264,58 @@ class Team extends \yii\db\ActiveRecord
 		}
 
 		return $new_team->id;
+	}
+	
+	public function beforeDelete()
+	{
+		if(!$this->event->active)
+		{
+			Yii::$app->session->addFlash('error', 'Teams cannot be deleted once an event is closed');
+			return false;
+		}
+
+		foreach($this->shifts as $shift)
+		{
+			if(!$shift->delete())
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function importShifts($data)
+	{
+		//Data should be a 2D array of the following
+		//[title, start_timestamp, length, min_participants, max_participants, requirement_name]
+
+		$count = 0;
+		foreach($data as $row)
+		{
+			$timestamp = strtotime($row[1]);
+
+			if(isset($row[5]))
+			{
+				$requirement = Requirement::findOne(['name' => $row[5]]);
+			}
+
+			$shift = new Shift();
+			$shift->title = $row[0];
+			$shift->start_time = $timestamp;
+			$shift->team_id = $this->id;
+			$shift->length = $row[2];
+			$shift->min_needed = !empty($row[3]) ? $row[3] : null;
+			$shift->max_needed = !empty($row[4]) ? $row[4] : null;
+			$shift->requirement_id = isset($requirement) ? $requirement->id : null;
+			$shift->active = true;
+
+			if($shift->save())
+			{
+				$count++;
+			}
+		}
+
+		Yii::$app->session->addFlash('success', sprintf("Imported %d of %d shifts successfully", $count, count($data)));
 	}
 }

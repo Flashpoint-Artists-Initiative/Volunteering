@@ -17,6 +17,7 @@ use yii2mod\rbac\components\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use backend\models\TeamCopyForm;
+use backend\models\ShiftImportForm;
 
 /**
  * TeamController implements the CRUD actions for Team model.
@@ -160,9 +161,13 @@ class TeamController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+		$model = $this->findModel($id);
+		if($model->delete() !== false)
+		{
+			Yii::$app->session->addFlash('success', 'Team deleted.');
+		}
+			
+		return $this->redirect(['/event/view', 'id' => $model->event_id]);
     }
 
 	public function actionCopy($id = null, $event_id = null)
@@ -182,9 +187,26 @@ class TeamController extends Controller
         }
 	}
 
-	public function actionDoCopy($id, $event_id)
+	public function actionImport($id)
 	{
+		$team = $this->findModel($id);
+		if(!$team->event->active)
+		{
+			Yii::$app->session->addFlash('error', 'Cannot add shifts when an event is inactive');
+			return $this->redirect(['view', 'id' => $id]);
+		}
 
+		$model = new ShiftImportForm();
+		$model->team_id = $id;
+		if($model->load(Yii::$app->request->post()))
+		{
+			$model->import();
+			return $this->redirect(['view', 'id' => $id]);
+		}
+
+		return $this->render('import', [
+			'model' => $model,
+		]);
 	}
 
     /**

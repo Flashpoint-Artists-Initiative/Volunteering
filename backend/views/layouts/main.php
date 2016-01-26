@@ -42,11 +42,6 @@ AppAsset::register($this);
 				'items' => []
 			];
 
-			if(!Yii::$app->user->isGuest)
-			{
-				$eventItems[] = ['label' => "Events I'm working",'url' => ['/me/events']];
-			}
-
 			if(Yii::$app->user->can('administrator'))
 			{
 				$eventItems[] = '<li class="divider">';
@@ -54,20 +49,13 @@ AppAsset::register($this);
 
 				$adminItems['items'][] = ['label' => 'Auth', 'url' => ['/rbac']];
 				$adminItems['items'][] = ['label' => 'Requirements', 'url' => ['/requirement']];
+				$adminItems['items'][] = ['label' => 'Teams','url' => ['/team/index']];
 			}
 
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-left'],
                 'items' => [
-                    ['label' => 'Events', 
-						'items' => $eventItems,
-					],
-                    ['label' => 'Teams', 
-						'items' => [
-							['label' => 'All Teams','url' => ['/team/index']],
-						],
-					],
-					Yii::$app->user->isGuest ? '': ['label' => 'My Shifts', 'url' => ['/me/shifts']],
+                    ['label' => 'All Events', 'url' => ['/event/index']],
 					Yii::$app->user->can('administrator') ? $adminItems : '',
                 ],
             ]);
