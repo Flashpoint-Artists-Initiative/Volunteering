@@ -21,7 +21,8 @@
         "kartik-v/yii2-widget-datetimepicker": "*",
         "yiisoft/yii2-debug": "^2.0",
 		"yii2mod/yii2-rbac": "*",
-        "fxp/composer-asset-plugin": "~1.0"
+        "fxp/composer-asset-plugin": "~1.0",
+        "kartik-v/yii2-widget-datepicker": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

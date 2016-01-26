@@ -190,4 +190,44 @@ class Event extends \yii\db\ActiveRecord
 
 		return true;
 	}
+
+	public function makeCopy($new_start)
+	{
+		$new_start += $this->start % (60*60*24);
+		$new_end = $new_start + ($this->end - $this->start);
+		$time_diff = ($new_start - $this->start) - floor(($new_start - $this->start) / (60*60*24));
+
+		var_dump($time_diff);
+
+		//Clone event
+		$new_event = new Event();
+		$new_event->attributes = $this->attributes;
+		$new_event->formStart = date(self::DATE_FORMAT, $new_start);
+		$new_event->formEnd = date(self::DATE_FORMAT, $new_end);
+		$new_event->name = "Copy of " . $this->name;
+		$new_event->save();
+
+		//Clone teams
+		$old_teams = $this->teams;
+		foreach($old_teams as $old_team)
+		{
+			$new_team = new Team();
+			$new_team->attributes = $old_team->attributes;
+			$new_team->event_id = $new_event->id;
+			$new_team->save();
+
+			//Clone shifts
+			$old_shifts = $old_team->shifts;
+			foreach($old_shifts as $old_shift)
+			{
+				$new_shift = new Shift();
+				$new_shift->attributes = $old_shift->attributes;
+				$new_shift->team_id = $new_team->id;
+				$new_shift->start_time += $time_diff;
+				$new_shift->save();
+			}
+		}
+
+		return $new_event->id;
+	}
 }

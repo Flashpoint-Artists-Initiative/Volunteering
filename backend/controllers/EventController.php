@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii2mod\rbac\components\AccessControl;
+use backend\models\EventCopyForm;
 
 /**
  * EventController implements the CRUD actions for Event model.
@@ -140,35 +141,18 @@ class EventController extends Controller
 
 	public function actionCopy($id)
 	{
-		$old_event = $this->findModel($id);
+		$model = new EventCopyForm();
+		$model->event_id = $id;
 
-		//Clone event
-		$new_event = new Event();
-		$new_event->attributes = $old_event->attributes;
-		$new_event->formStart = $old_event->formStart;
-		$new_event->formEnd = $old_event->formEnd;
-
-		//Clone teams
-		$old_teams = $old_event->teams;
-		foreach($old_teams as $old_team)
+        if ($model->load(Yii::$app->request->post()))
 		{
-			$new_team = new Team();
-			$new_team->attributes = $old_team->attributes;
-			$new_team->event_id = $new_event->id;
-			$new_team->save();
-
-			//Clone shifts
-			$old_shifts = $old_team->shifts;
-			foreach($old_shifts as $old_shift)
-			{
-				$new_shift = new Shift();
-				$new_shift->attributes = $old_shift->attributes;
-				$new_shift->team_id = $new_team->id;
-				$new_shift->save();
-			}
-		}
-
-        return $this->redirect(['view', 'id' => $new_event->id]);
+			$new_id = $model->copy();
+        	return $this->redirect(['update', 'id' => $new_id]);
+        } else {
+            return $this->render('copy', [
+                'model' => $model,
+            ]);
+        }
 	}
 
     /**
