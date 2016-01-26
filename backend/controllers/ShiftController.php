@@ -6,10 +6,12 @@ use Yii;
 use common\models\Shift;
 use common\models\ShiftSearch;
 use common\models\Requirement;
+use common\models\Participant;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii2mod\rbac\components\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * ShiftController implements the CRUD actions for Shift model.
@@ -53,8 +55,13 @@ class ShiftController extends Controller
      */
     public function actionView($id)
     {
+		$model = $this->findModel($id);
+		$dp = new ActiveDataProvider([
+			'query' => Participant::find()->where(['shift_id' => $id]),
+		]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+			'model' => $model,
+			'dp' => $dp,
         ]);
     }
 

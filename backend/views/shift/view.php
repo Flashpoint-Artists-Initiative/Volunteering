@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\data\ActiveDataProvider;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Shift */
@@ -30,15 +32,30 @@ $this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'team_id',
+            'team.name',
             'title',
             'length',
             'start_time:datetime',
-            'participant_num',
-            'active',
-            'requirement_id',
+			'min_needed',
+			'max_needed',
+            'active:boolean',
+            'requirement.name',
         ],
     ]) ?>
+
+	<h3>Volunteers</h3>
+	<?php echo GridView::widget([
+		'dataProvider' => $dp,
+		'columns' => [
+			'user.username',
+			'user.real_name',
+			'user.burn_name',
+            [
+				'class' => 'yii\grid\ActionColumn',
+				'controller' => 'participant',
+				'template' => '{delete}', 
+			],
+		],
+	]);?>
 
 </div>
