@@ -39,7 +39,10 @@ AppAsset::register($this);
 			];
 			$adminItems = [
 				'label' => 'Admin',
-				'items' => []
+				'items' => [
+					['label' => 'Auth', 'url' => ['/rbac']],
+					['label' => 'Teams','url' => ['/team/index']],
+				],
 			];
 
 			if(Yii::$app->user->can('administrator'))
@@ -47,15 +50,13 @@ AppAsset::register($this);
 				$eventItems[] = '<li class="divider">';
 				$eventItems[] = ['label' => 'Admin Events', 'url' => ['/event/admin']];
 
-				$adminItems['items'][] = ['label' => 'Auth', 'url' => ['/rbac']];
-				$adminItems['items'][] = ['label' => 'Requirements', 'url' => ['/requirement']];
-				$adminItems['items'][] = ['label' => 'Teams','url' => ['/team/index']];
 			}
 
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-left'],
                 'items' => [
                     ['label' => 'All Events', 'url' => ['/event/index']],
+					['label' => 'User Requirements', 'url' => ['/requirement/index']],
 					Yii::$app->user->can('administrator') ? $adminItems : '',
                 ],
             ]);
