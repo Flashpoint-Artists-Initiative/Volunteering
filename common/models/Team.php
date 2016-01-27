@@ -15,6 +15,7 @@ use yii\db\Expression;
  * @property integer $id
  * @property string $description
  * @property string $contact
+ * @property string $leads
  * @property integer $event_id
  * @property string $name
  */
@@ -36,7 +37,7 @@ class Team extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['description'], 'string'],
+            [['description', 'leads'], 'string'],
             [['event_id'], 'required'],
             [['event_id'], 'integer'],
             [['contact', 'name'], 'string', 'max' => 255]
@@ -55,6 +56,7 @@ class Team extends \yii\db\ActiveRecord
             'event_id' => 'Event',
 			'name' => 'Team Name',
 			'statusSummary' => 'Status',
+			'leads' => 'Team Leads',
         ];
     }
 

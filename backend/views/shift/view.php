@@ -50,6 +50,7 @@ $this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_
 			'user.username',
 			'user.real_name',
 			'user.burn_name',
+			'user.email',
             [
 				'class' => 'yii\grid\ActionColumn',
 				'controller' => 'participant',

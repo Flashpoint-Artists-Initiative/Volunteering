@@ -37,6 +37,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public function attributeLabels()
 	{
 		return  [
+			'username' => 'Username',
+			'email' => 'Email',
 			'burn_name' => 'Burn Name',
 			'real_name' => 'Legal Name',
 			'new_password_repeat' => 'Confirm new password',

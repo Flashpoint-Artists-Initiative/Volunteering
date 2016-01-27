@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fb9e173b04ebaac9e48788fbe82fe948",
-    "content-hash": "e6971cf48f7d8d6115d907e0066e1a56",
+    "hash": "d994c7f88a95808afc23c831a35c4c46",
+    "content-hash": "c123f0f6518623c59bf32e607aabb60b",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -541,6 +541,91 @@
                 "yii2"
             ],
             "time": "2016-01-10 12:18:38"
+        },
+        {
+            "name": "moonlandsoft/helpers",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moonlandsoft/helpers.git",
+                "reference": "8a8c981b17112f04e1da0bd0de8d56adfb8e5adf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moonlandsoft/helpers/zipball/8a8c981b17112f04e1da0bd0de8d56adfb8e5adf",
+                "reference": "8a8c981b17112f04e1da0bd0de8d56adfb8e5adf",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "moonland\\helpers\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Moh Khoirul Anam",
+                    "email": "moh.khoirul.anaam@gmail.com"
+                }
+            ],
+            "description": "Helper for all widgets",
+            "keywords": [
+                "extension",
+                "yii2"
+            ],
+            "time": "2015-01-23 14:45:15"
+        },
+        {
+            "name": "moonlandsoft/yii2-tinymce",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moonlandsoft/yii2-tinymce.git",
+                "reference": "3a3a3298696d53285cc7914a9878a4d4f24ae7b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moonlandsoft/yii2-tinymce/zipball/3a3a3298696d53285cc7914a9878a4d4f24ae7b9",
+                "reference": "3a3a3298696d53285cc7914a9878a4d4f24ae7b9",
+                "shasum": ""
+            },
+            "require": {
+                "moonlandsoft/helpers": "*",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "moonland\\tinymce\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Moh Khoirul Anam",
+                    "email": "moh.khoirul.anaam@gmail.com"
+                }
+            ],
+            "description": "The TinyMCE Extension for yii framework",
+            "keywords": [
+                "editor",
+                "extension",
+                "text",
+                "tinymce",
+                "wyswyg",
+                "yii2"
+            ],
+            "time": "2015-01-24 04:45:03"
         },
         {
             "name": "swiftmailer/swiftmailer",
