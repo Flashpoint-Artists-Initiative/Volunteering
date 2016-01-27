@@ -27,7 +27,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'Alchemy Volunteer System',
+                'brandLabel' => Yii::$app->name, 
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -56,14 +56,26 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-left'],
                 'items' => [
                     ['label' => 'All Events', 'url' => ['/event/index']],
-					['label' => 'User Requirements', 'url' => ['/requirement/index']],
+					['label' => 'User Requirements', 'items' => [
+						['label' => 'Create Requirements', 'url' => ['/requirement/index']],
+						['label' => 'Assign Requirements', 'url' => ['/requirement/assign']],
+					]],
 					Yii::$app->user->can('administrator') ? $adminItems : '',
                 ],
             ]);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-					Yii::$app->user->isGuest ? '' : ['label' => 'Logged in as ' . Yii::$app->user->identity->username, 'url' => ['/me']],
+					[
+						'label' => 'Return to Website', 
+						'items' => [
+							['label' => 'Volunteer Frontend', 'url' => 'http://volunteer.alchemyburn.com'],
+							['label' => 'Alchemy', 'url' => 'http://alchemyburn.com'], 
+							['label' => 'Euphoria', 'url' => 'http://euphoriaburn.com'], 
+							['label' => 'Art Fundraiser', 'url' => 'http://art.alchemyburn.com'], 
+						],
+					],
+					Yii::$app->user->isGuest ? '' : ['label' => 'Logged in as ' . Yii::$app->user->identity->username, 'url' => ['/#']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
                         ['label' => 'Logout', 'url' => ['/site/logout'],

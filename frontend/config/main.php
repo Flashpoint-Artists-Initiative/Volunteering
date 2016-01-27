@@ -11,7 +11,6 @@ $config = [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-	'modules' => [],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'user' => [
@@ -32,6 +31,9 @@ $config = [
 		],
 		'request' => [
 			'baseUrl' => '',
+		],
+		'authManager' => [
+			'class' => 'yii\rbac\DbManager',
 		],
     ],
     'params' => $params,

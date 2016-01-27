@@ -75,7 +75,7 @@ class EventController extends Controller
     {
 		$event = $this->findModel($id);
 		$dp = new ActiveDataProvider([
-			'query' => Team::find()->where(['event_id' => $id]), 
+			'query' => Team::find()->where(['event_id' => $id])->addOrderBy('name asc'), 
 			'pagination' => false,
 		]);
 

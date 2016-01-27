@@ -28,16 +28,28 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'Alchemy Volunteer System',
+        'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
 
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
+    $menuItems = [];
+
+	if(Yii::$app->user->can('/site/index'))
+	{
+		$menuItems[] = ['label' => 'Volunteer Admin', 'url' => 'http://volunteer.alchemyburn.com/admin'];
+	}
+	
+	$menuItems[] = [
+		'label' => 'Return to Website', 
+		'items' => [
+			['label' => 'Alchemy', 'url' => 'http://alchemyburn.com'], 
+			['label' => 'Euphoria', 'url' => 'http://euphoriaburn.com'], 
+			['label' => 'Art Fundraiser', 'url' => 'http://art.alchemyburn.com'], 
+		],
+	];
 	$leftItems = [];
 
     if (Yii::$app->user->isGuest) {
