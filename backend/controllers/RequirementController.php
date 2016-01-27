@@ -3,12 +3,15 @@
 namespace backend\controllers;
 
 use Yii;
+use common\models\User;
+use common\models\UserSearch;
 use common\models\Requirement;
 use common\models\RequirementSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii2mod\rbac\components\AccessControl;
+use yii\data\ActiveDataProvider;
 
 /**
  * RequirementController implements the CRUD actions for Requirement model.
@@ -106,6 +109,18 @@ class RequirementController extends Controller
 
         return $this->redirect(['index']);
     }
+
+	public function actionAssign()
+	{
+		$searchModel = new UserSearch();
+        $dp = $searchModel->search(Yii::$app->request->queryParams);
+
+		return $this->render('assign',[
+			'dp' => $dp,
+			'searchModel' => $searchModel,
+		]);
+		
+	}
 
     /**
      * Finds the Requirement model based on its primary key value.

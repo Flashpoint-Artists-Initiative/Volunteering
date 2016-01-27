@@ -12,7 +12,10 @@ use yii\filters\VerbFilter;
 use common\models\LoginForm;
 use common\models\ContactForm;
 use common\models\User;
+use common\models\UserRequirement;
 use yii2mod\rbac\components\AccessControl;
+use yii\data\ActiveDataProvider;
+use backend\models\AddUserRequirementForm;
 
 class UserController extends Controller
 {
@@ -61,6 +64,39 @@ class UserController extends Controller
 	{
 	}
 
+	public function actionView($id)
+	{
+		$user = $this->findModel($id);
+		$dp = new ActiveDataProvider([
+			'query' => UserRequirement::find()->where(['user_id' => $id]),
+		]);
+
+		$form = new AddUserRequirementForm();
+		$form->user_id = $id;
+
+        if($form->load(Yii::$app->request->post())) 
+		{
+			$form->addUserRequirement();
+        }
+
+		return $this->render('view', [
+			'model' => $user,
+			'dp' => $dp,
+			'form' => $form,
+		]);
+	}
+
+	public function actionDeleteRequirement($user_id, $requirement_id)
+	{
+		$req = UserRequirement::findOne(['user_id' => $user_id, 'requirement_id' => $requirement_id]);
+		if($req)
+		{
+			$req->delete();
+		}
+
+		return $this->redirect(['/user/view', 'id' => $user_id]);
+	}
+
 	public function actionAjaxSearch($term = '')
 	{
 		Yii::$app->response->format = Response::FORMAT_JSON;
@@ -82,4 +118,13 @@ class UserController extends Controller
 		
 		return $output;
 	}
+
+    protected function findModel($id)
+    {
+        if (($model = User::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }

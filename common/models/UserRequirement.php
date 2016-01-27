@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use common\models\User;
+use common\models\Requirement;
 
 /**
  * This is the model class for table "user_requirement".
@@ -31,6 +33,11 @@ class UserRequirement extends \yii\db\ActiveRecord
         ];
     }
 
+	public static function primaryKey()
+	{
+		return ['user_id', 'requirement_id'];
+	}
+
     /**
      * @inheritdoc
      */
@@ -41,4 +48,14 @@ class UserRequirement extends \yii\db\ActiveRecord
             'requirement_id' => 'Requirement ID',
         ];
     }
+
+	public function getRequirement()
+	{
+		return $this->hasOne(Requirement::className(), ['id' => 'requirement_id']);
+	}
+
+	public function getUser()
+	{
+		return $this->hasOne(User::className(), ['id' => 'user_id']);
+	}
 }
