@@ -67,6 +67,17 @@ class Participant extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Shift::className(), ['id' => 'shift_id']);
 	}
+	
+	public function beforeSave()
+	{
+		if(!$this->shift->team->event->active)
+		{
+			Yii::$app->session->addFlash("error", "Cannot modify shifts that are part of an inactive Event");
+			return false;
+		}
+
+		return true;
+	}
 
 	public function beforeDelete()
 	{

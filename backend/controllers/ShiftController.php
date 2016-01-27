@@ -12,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii2mod\rbac\components\AccessControl;
 use yii\data\ActiveDataProvider;
+use backend\models\AddParticipantForm;
 
 /**
  * ShiftController implements the CRUD actions for Shift model.
@@ -59,8 +60,18 @@ class ShiftController extends Controller
 		$dp = new ActiveDataProvider([
 			'query' => Participant::find()->where(['shift_id' => $id]),
 		]);
+
+		$form = new AddParticipantForm();
+		$form->shift_id = $id;
+
+        if($form->load(Yii::$app->request->post())) 
+		{
+			$form->addUser();
+        }
+
         return $this->render('view', [
 			'model' => $model,
+			'form' => $form,
 			'dp' => $dp,
         ]);
     }

@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
+use yii\bootstrap\ActiveForm;
+use yii\web\JsExpression;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Shift */
@@ -58,5 +61,32 @@ $this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_
 			],
 		],
 	]);?>
+	
+	<h4>Add Volunteer</h4>
+	<p>Warning, this will add a user to the shift, regardless of any caps or requirements</p>
+	<?php $activeForm = ActiveForm::begin(['id' => 'add-participant-form']); ?>
+
+		<?= $activeForm->field($form, 'user_search')->widget(\yii\jui\AutoComplete::classname(), [
+			'clientOptions' => [
+				'source' => new JsExpression("function(request, response) {
+						$.getJSON('" . Url::to(['/user/ajax-search'])  . "', {
+							term: request.term
+						}, response);
+					}"),
+				'select' => new JsExpression("function(event, ui) {
+					$('#addparticipantform-user_id').val(ui.item.id);
+				}"),
+			],
+			'options' => [
+				'class' => 'form-control ui-autocomplete-input',
+			],
+		]);?>
+		<?= Html::activeHiddenInput($form, 'user_id');?>
+
+		<div class="form-group">
+			<?= Html::submitButton('Copy', ['class' => 'btn btn-primary', 'name' => 'copy-button']) ?>
+		</div>
+
+	<?php ActiveForm::end(); ?>
 
 </div>
