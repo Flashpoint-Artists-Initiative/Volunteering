@@ -7,6 +7,7 @@ use common\models\User;
 use common\models\UserSearch;
 use common\models\Requirement;
 use common\models\RequirementSearch;
+use yii\web\Response;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -120,6 +121,23 @@ class RequirementController extends Controller
 			'searchModel' => $searchModel,
 		]);
 		
+	}
+
+	public function actionTeamAjaxSearch($term = '')
+	{
+		Yii::$app->response->format = Response::FORMAT_JSON;
+		$reqs = Requirement::find()
+			->where(['like', 'team', $term])
+			->andWhere(['not', ['team' => null]])
+			->all();
+		$output = [];
+
+		foreach($reqs as $req)
+		{
+			$output[] = $req->team;
+		}
+		
+		return $output;
 	}
 
     /**

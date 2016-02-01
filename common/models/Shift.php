@@ -148,14 +148,19 @@ class Shift extends \yii\db\ActiveRecord
 		return $this->maxSpots - $this->filled;
 	}
 
-	public function canBeFilled($user_id = null)
+	public function meetsRequirement($user_id = null)
 	{
 		if($this->requirement)
 		{
-			return $this->RemainingSpots !== 0 && $this->requirement->check($user_id);
+			return $this->requirement->check($user_id);
 		}
 
-		return $this->RemainingSpots !== 0;
+		return true;
+	}
+
+	public function canBeFilled()
+	{
+		return $this->RemainingSpots > 0;
 	}
 
 	public function getStatus()
@@ -219,6 +224,11 @@ class Shift extends \yii\db\ActiveRecord
 			return "Login to sign up";
 		}
 
+		if(!$this->event->active)
+		{
+			return Html::a('Event Closed', '#', ['class' => 'btn btn-xs btn-default disabled']);
+		}
+
 		$classes = 'btn btn-xs';
 		$title = '';
 		$url = '#';
@@ -229,31 +239,32 @@ class Shift extends \yii\db\ActiveRecord
 			$url = ["shift/cancel", "id" => $this->id];
 			$title = "Cancel";
 		}
-		elseif($this->remainingSpots === 0)
+		elseif(!$this->canBeFilled())
 		{
 			$classes .= ' btn-default disabled';
 			$title = "Shift Full";
 		}
-		elseif($this->canBeFilled($user_id))
+		elseif($this->requirement)
+		{
+			$title = "Requires: " . Html::encode($this->requirement->name);
+			$url = ["shift/signup", "id" => $this->id];
+
+			if($this->meetsRequirement($user_id))
+			{
+				$classes .= " btn-primary";
+			}
+			else
+			{
+				$classes .= " btn-warning";
+			}
+		}
+		else
 		{
 			$classes .= ' btn-primary';
 			$url = ["shift/signup", "id" => $this->id];
 			$title = "Sign Up";
 		}
-		else
-		{
-			$classes .= ' btn-default disabled';
-			$url = '#';
-			$title = 'Not Allowed';
-		}
 		
-		if(!$this->event->active)
-		{
-			$classes = 'btn btn-xs btn-default disabled';
-			$url = '#';
-			$title = 'Event Closed';
-		}
-
 		return Html::a($title, $url, ['class' => $classes]);
 	}
 
@@ -266,9 +277,15 @@ class Shift extends \yii\db\ActiveRecord
 			return false;
 		}
 
-		if(!$this->canBeFilled($user_id))
+		if(!$this->canBeFilled())
 		{
-			Yii::$app->session->addFlash("error", "This shift is full, or you do not meet it's requirements.");
+			Yii::$app->session->addFlash("error", "This shift is full.");
+			return false;
+		}
+
+		if(!$this->meetsRequirement($user_id))
+		{
+			Yii::$app->session->addFlash("error", $this->requirement->errorMessageString);
 			return false;
 		}
 
@@ -279,7 +296,7 @@ class Shift extends \yii\db\ActiveRecord
 		if($participant->save())
 		{
 			Yii::$app->session->addFlash("success", sprintf("You are now signed up for the %s '%s' shift on %s", 
-				$this->team->name, $this->title, date("M j \a\t g:i a", $this->start_time)));
+				$this->team->name, $this->title, date('M j \a\t g:i a', $this->start_time)));
 			return true;
 		}
 
@@ -297,7 +314,7 @@ class Shift extends \yii\db\ActiveRecord
 				{
 					$p->delete();
 					Yii::$app->session->addFlash("success", sprintf("You have been removed from the %s '%s' shift on %s", 
-						$this->team->name, $this->title, date("M j \a\t g:i a", $this->start_time)));
+						$this->team->name, $this->title, date('M j \a\t g:i a', $this->start_time)));
 					return true;
 				}
 			}

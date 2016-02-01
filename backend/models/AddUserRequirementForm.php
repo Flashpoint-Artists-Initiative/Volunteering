@@ -39,7 +39,20 @@ class AddUserRequirementForm extends Model
 
 	public function getRequirementList()
 	{
-		$requirements = Requirement::find()->all();
+		$requirements = Requirement::find()->addOrderBy('name asc')->all();
+		$output = [];
+
+		foreach($requirements as $req)
+		{
+			if(!isset($output[$req->teamString]))
+			{
+				$output[$req->teamString] = [];
+			}
+
+			$output[$req->teamString][$req->id] = $req->name;
+		}
+		
+		return $output;
 		return ArrayHelper::map($requirements, 'id', 'name');
 	}
 

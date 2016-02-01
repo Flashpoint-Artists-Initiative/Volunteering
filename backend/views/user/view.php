@@ -36,7 +36,7 @@ use yii\helpers\Url;
 
 	<h3>Add Requirement to User</h3>
 	<?php $activeForm = ActiveForm::begin(['id' => 'add-user_requirement-form']);?>
-	<?= $activeForm->field($form, 'requirement_id')->dropdownList($form->requirementList);?>
+	<?= $activeForm->field($form, 'requirement_id')->dropdownList($form->requirementList, ['prompt' => 'Select a Requirement']);?>
 	<?= Html::submitButton('Assign', ['class' => 'btn btn-success']);?>
 	<?php ActiveForm::end(); ?>
 </div>
