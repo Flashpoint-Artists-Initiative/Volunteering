@@ -204,7 +204,7 @@ class Shift extends \yii\db\ActiveRecord
 		return 'success';
 	}
 
-	protected function hasParticipant($user_id)
+	public function hasParticipant($user_id)
 	{
 		foreach($this->participants as $participant)
 		{

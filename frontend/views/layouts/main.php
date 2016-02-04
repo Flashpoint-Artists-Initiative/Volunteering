@@ -59,8 +59,9 @@ AppAsset::register($this);
 		$leftItems[] = [
 			'label' => 'My Account',
 			'items' => [
-				['label' => 'My Shifts', 'url' => ['/shift/mine']],
-				['label' => 'Account Settings', 'url' => ['/site/userinfo']],
+				['label' => 'My Shifts', 'url' => ['/account/shifts']],
+				['label' => 'My Qualifications', 'url' => ['/account/qualifications']],
+				['label' => 'Account Settings', 'url' => ['/account/settings']],
 			],
 		];
         $menuItems[] = [

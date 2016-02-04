@@ -19,9 +19,9 @@ use common\models\Participant;
 use common\models\Event;
 
 /**
- * Shift controller
+ * Account controller
  */
-class ShiftController extends Controller
+class AccountController extends Controller
 {
     /**
      * @inheritdoc
@@ -63,52 +63,56 @@ class ShiftController extends Controller
         ];
     }
 
-	public function actionSignup($id, $uid = null)
+	public function actionShifts($id = null)
 	{
-		if($uid == null)
+		if(!isset($id))
 		{
-			$uid = Yii::$app->user->id;
+			$id = Yii::$app->params['currentEvent'];
 		}
 
-		$shift = $this->findModel($id);
+		$data = Participant::findUserEventDataByDay($id, Yii::$app->user->id);
+		$events = Event::find()->where(['not', ['id' => $id]])->all();
 
-		$shift->addParticipant($uid);
-
-		if(isset(Yii::$app->request->referrer))
-		{
-			return $this->redirect(Yii::$app->request->referrer);
-		}
-
-		return $this->redirect(['/site/index']);
-		//$this->redirect(['team/view', 'id' => $shift->team_id]);
+		return $this->render('shifts', [
+			'data' => $data,
+			'event' => Event::findOne($id),
+			'events' => $events,
+		]);
 	}
 
-	public function actionCancel($id, $uid = null)
+	public function actionSettings()
 	{
-		if($uid == null)
+		$user = Yii::$app->user->identity;
+		$user->setScenario('update');
+		if($user->load(Yii::$app->request->post()) && $user->save())
 		{
-			$uid = Yii::$app->user->id;
+			Yii::$app->session->addFlash("success", "Thank you for filling out your user information");
+			return $this->redirect('/site/index');
 		}
 
-		$shift = $this->findModel($id);
-
-		$shift->removeParticipant($uid);
-
-		if(isset(Yii::$app->request->referrer))
-		{
-			return $this->redirect(Yii::$app->request->referrer);
-		}
-
-		return $this->redirect(['/site/index']);
-		//$this->redirect(['team/view', 'id' => $shift->team_id]);
+		return $this->render('settings', [
+			'model' => $user,
+		]);
 	}
 
-	protected function findModel($id)
-    {
-        if (($model = Shift::find()->where(['id' => $id])->with('participants')->one()) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+	public function actionQualifications()
+	{
+		$requirements = Yii::$app->user->identity->requirements;
+
+		$output = [];
+
+		foreach($requirements as $req)
+		{
+			if(!isset($output[$req->team]))
+			{
+				$output[$req->team] = [];
+			}
+
+			$output[$req->team][] = $req->name;
+		}
+		
+		return $this->render('qualifications', [
+			'output' => $output,
+		]);
+	}
 }

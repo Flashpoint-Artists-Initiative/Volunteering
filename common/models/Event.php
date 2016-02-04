@@ -172,6 +172,22 @@ class Event extends \yii\db\ActiveRecord
 			$this->filledShifts, $this->minTotalShifts, $this->maxTotalShifts);
 	}
 
+	public function getUserShiftCount($user_id = null)
+	{
+		if(!isset($user_id))
+		{
+			$user_id = Yii::$app->user->id;
+		}
+
+		$sum = 0;
+		foreach($this->teams as $team)
+		{
+			$sum += $team->getUserShiftCount($user_id);
+		}
+
+		return $sum;
+	}
+
 	public function beforeDelete()
 	{
 		if(!$this->active)

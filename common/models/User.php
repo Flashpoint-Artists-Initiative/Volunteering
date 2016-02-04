@@ -118,7 +118,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 	public function getParticipation()
 	{
-		Participant::findAll(['user_id' => $this->uid]);
+		return Participant::findAll(['user_id' => $this->uid]);
 	}
 
 	public function getRequirements()

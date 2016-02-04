@@ -113,6 +113,20 @@ class Team extends \yii\db\ActiveRecord
 		return $sum;
 	}
 
+	public function getUserShiftCount($user_id)
+	{
+		$sum = 0;
+		foreach($this->shifts as $shift)
+		{
+			if($shift->hasParticipant($user_id))
+			{
+				$sum++;
+			}
+		}
+
+		return $sum;
+	}
+
 	public function getStatusSummary()
 	{
 		$filled = $min_needed = $max_needed = 0;

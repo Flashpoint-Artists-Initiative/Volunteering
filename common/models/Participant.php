@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use common\components\MDateTime;
 
 /**
  * This is the model class for table "participant".
@@ -87,5 +88,41 @@ class Participant extends \yii\db\ActiveRecord
 		}
 
 		return true;
+	}
+
+	public static function findUserEventDataByDay($event_id, $user_id)
+	{
+		$participants = self::find()
+			->where(['user_id' => $user_id])
+			->andWhere(['team.event_id' => $event_id])
+			->joinWith(['shift', 'shift.team']) 
+			->all();
+
+		$data = [];
+
+		foreach($participants as $participant)
+		{
+			$shift = $participant->shift;
+			$team = $shift->team;
+
+			$start_day = new MDateTime($shift->start_time);
+			$start_day->subToStart('D');
+
+			if(!isset($data[$start_day->timestamp]))
+			{
+				$data[$start_day->timestamp] = [];
+			}
+
+			$data[$start_day->timestamp][] = $participant;
+		}
+
+		foreach($data as $timestamp => $day_data)
+		{
+			uasort($data[$timestamp], function($a, $b){
+				return $a->shift->start_time > $b->shift->start_time;
+			});
+		}
+
+		return $data;
 	}
 }
