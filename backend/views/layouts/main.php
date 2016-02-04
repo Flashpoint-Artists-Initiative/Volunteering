@@ -100,7 +100,8 @@ AppAsset::register($this);
     <footer class="footer">
         <div class="container">
             <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
+			<p class="pull-right">This site is still a work in progress, please contact 
+				<?= Html::mailto(Yii::$app->params['adminEmail'], Yii::$app->params['adminEmail']);?> with any issues or suggestions.</p>
         </div>
     </footer>
 
