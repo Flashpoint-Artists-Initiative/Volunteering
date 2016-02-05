@@ -31,6 +31,8 @@ $this->params['breadcrumbs'][] = $model->name;
         ]) ?>
         <?= Html::a('Add Shift', '#add-shift', ['class' => 'btn btn-success']) ?>
         <?= Html::a('Import Shifts', ['import', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
+		<?= Html::a('View Volunteers', ['volunteers', 'id' => $model->id], ['class' => 'btn btn-success']); ?>
+		<?= Html::a('View Schedule', ['schedule', 'id' => $model->id], ['class' => 'btn btn-success']); ?>
     </p>
 
     <?= DetailView::widget([

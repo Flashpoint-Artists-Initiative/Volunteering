@@ -324,6 +324,16 @@ class Shift extends \yii\db\ActiveRecord
 		return false;
 	}
 
+	public function getVolunteerNameList()
+	{
+		$output = [];
+		foreach($this->participants as $p)
+		{
+			$output[] = Html::encode(!empty($p->user->burn_name) ? $p->user->burn_name : $p->user->real_name);
+		}
+		return implode("<br>\n", $output);
+	}
+
 	public function getVolunteerList()
 	{
 		$output = [];
@@ -331,7 +341,7 @@ class Shift extends \yii\db\ActiveRecord
 		{
 			$output[] = Html::encode($p->user->username);
 		}
-		return implode("<br>", $output);
+		return implode("<br>\n", $output);
 	}
 
 	public function beforeDelete()
@@ -351,5 +361,30 @@ class Shift extends \yii\db\ActiveRecord
 		}
 
 		return true;
+	}
+
+	public function getLengthString()
+	{
+		$h = floor($this->length);
+		$m = round(60 * ($this->length - $h));
+		
+		if($m == 0)
+		{
+			return sprintf("%u hours", $h);
+		}
+
+		if($h == 0)
+		{
+			return sprintf("%u minutes", $m);
+		}
+
+		return sprintf("%u hours, %u minutes", $h, $m);
+	}
+
+	public function getTimeAndLength()
+	{
+		$start = date('g:i a', $this->start_time);
+		$end = date('g:i a', $this->start_time + ($this->length * 3600));
+		return sprintf("%s - %s (%s)", $start, $end, $this->lengthString);
 	}
 }

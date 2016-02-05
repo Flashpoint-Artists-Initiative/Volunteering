@@ -209,6 +209,28 @@ class TeamController extends Controller
 		]);
 	}
 
+	public function actionSchedule($id)
+	{
+		$model = $this->findModel($id);
+		$dp = $model->scheduleDataProvider;
+
+		return $this->render('schedule', [
+			'event' => $model,
+			'dp' => $dp,
+		]);
+	}
+
+	public function actionVolunteers($id)
+	{
+		$model = $this->findModel($id);
+		$dp = $model->volunteerDataProvider;
+
+		return $this->render('volunteers', [
+			'event' => $model,
+			'dp' => $dp,
+		]);
+	}
+
     /**
      * Finds the Team model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

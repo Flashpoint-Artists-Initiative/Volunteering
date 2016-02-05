@@ -154,7 +154,7 @@ class Team extends \yii\db\ActiveRecord
 			$extra_remaining += $shift->maxSpots - $shift->minSpots - $extra_filled;
 		}
 
-		$min_plural = $min_remaining == 1 ? "shift" : "shifts";
+		$min_plural = $min_remaining == 1 ? "volunteer" : "volunteers";
 		$extra_plural = $extra_remaining == 1 ? "shift" : "shifts";
 
 		if($min_remaining <= 0 && $extra_remaining <= 0)
@@ -333,5 +333,46 @@ class Team extends \yii\db\ActiveRecord
 		}
 
 		Yii::$app->session->addFlash('success', sprintf("Imported %d of %d shifts successfully", $count, count($data)));
+	}
+
+	public function getVolunteerDataProvider()
+	{
+		return new ActiveDataProvider([
+			'query' => User::find()
+				->addSelect([new Expression("user.*, sum(case when participant.user_id = user.id then 1 else 0 end) as num_shifts")])
+				->joinWith(['participation.shift.team'])
+				->where(['team.event_id' => $this->id])
+				->groupBy('user.id'),
+			'sort' => [
+				'defaultOrder' => [
+					'username' => SORT_ASC,
+				],
+				'attributes' => [
+					'num_shifts' => [
+						'asc' => ['num_shifts' => SORT_ASC],
+						'desc' => ['num_shifts' => SORT_DESC],
+					],
+					'username',
+					'real_name',
+					'burn_name',
+					'email',
+				],
+			],
+		]);
+	}
+
+	public function getScheduleDataProvider()
+	{
+		return new ActiveDataProvider([
+			'query' => Shift::find()
+				->joinWith(['team', 'participants.user'])
+				->where(['shift.team_id' => $this->id])
+				->orderBy([
+					'start_time' => SORT_ASC, 
+					'title' => SORT_ASC,
+				]),
+			'pagination' => false,
+			'sort' => false,
+		]);
 	}
 }

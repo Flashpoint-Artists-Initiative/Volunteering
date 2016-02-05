@@ -14,6 +14,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public $new_password_repeat;
 	public $settings;
 
+	public $num_shifts;
+
     public static function tableName()
     {
         return 'user';
@@ -118,7 +120,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
 	public function getParticipation()
 	{
-		return Participant::findAll(['user_id' => $this->uid]);
+		return $this->hasMany(Participant::className(), ['user_id' => 'id']);
 	}
 
 	public function getRequirements()
@@ -141,6 +143,21 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public function afterFind()
 	{
 		$this->settings = unserialize($this->data);
+	}
+
+	public function getEventParticipation($event_id)
+	{
+		$output = [];
+
+		foreach($this->participation as $p)
+		{
+			if($p->shift->team->event_id == $event_id)
+			{
+				$output[] = $p;
+			}
+		}
+
+		return $output;
 	}
 
 

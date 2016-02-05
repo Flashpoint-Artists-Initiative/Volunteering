@@ -6,6 +6,8 @@ use Yii;
 use common\models\Event;
 use common\models\Team;
 use common\models\EventSearch;
+use common\models\Participant;
+use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -39,12 +41,12 @@ class EventController extends Controller
      */
     public function actionIndex()
     {
-		$active = new \yii\data\ActiveDataProvider([
+		$active = new ActiveDataProvider([
 			'query' => Event::find()->addOrderBy('start DESC')->where(['active' => true]),
 			'pagination' => false,
 		]);
 
-		$inactive = new \yii\data\ActiveDataProvider([
+		$inactive = new ActiveDataProvider([
 			'query' => Event::find()->addOrderBy('start DESC')->where(['active' => false]),
 		]);
 
@@ -56,7 +58,7 @@ class EventController extends Controller
 
     public function actionAdmin()
     {
-		$dataProvider = new \yii\data\ActiveDataProvider([
+		$dataProvider = new ActiveDataProvider([
 			'query' => Event::find(),
 			'pagination' => false,
 		]);
@@ -153,6 +155,28 @@ class EventController extends Controller
                 'model' => $model,
             ]);
         }
+	}
+
+	public function actionSchedule($id)
+	{
+		$model = $this->findModel($id);
+		$dp = $model->scheduleDataProvider;
+
+		return $this->render('schedule', [
+			'event' => $model,
+			'dp' => $dp,
+		]);
+	}
+
+	public function actionVolunteers($id)
+	{
+		$model = $this->findModel($id);
+		$dp = $model->volunteerDataProvider;
+
+		return $this->render('volunteers', [
+			'event' => $model,
+			'dp' => $dp,
+		]);
 	}
 
     /**

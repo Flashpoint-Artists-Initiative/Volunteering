@@ -1,7 +1,10 @@
 <?php
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\HtmlPurifier;
+
 /* @var $this yii\web\View */
+$this->title = $event->name . " - " . $team->name;
 ?>
 <h1>Signup for <?php echo sprintf("%s %s", Html::encode($event->name), Html::encode($team->name));?> shifts</h1>
 <p><strong>Team Leads:</strong> <?= Html::encode($team->leads);?></p>
