@@ -11,15 +11,15 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\Shift */
 
-$this->title = $model->title;
+$this->title = $model->title . " - " . $model->team->name . " - " . $model->event->name;
 $this->params['breadcrumbs'][] = ['label' => 'Events', 'url' => ['/event/index']];
 $this->params['breadcrumbs'][] = ['label' => $model->event->name, 'url' => ['/event/view', 'id' => $model->event->id]];
 $this->params['breadcrumbs'][] = ['label' => $model->team->name, 'url' => ['/team/view', 'id' => $model->team->id]];
-$this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_time);
+$this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_time) . " - " . $model->title;
 ?>
 <div class="shift-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1>Shift: <?= Html::encode($model->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_
 	]);?>
 	
 	<h4>Add Volunteer</h4>
-	<p>Warning, this will add a user to the shift, regardless of any caps or requirements</p>
+	<p class="help-block">Warning, this will add a user to the shift, regardless of any caps or requirements</p>
 	<?php $activeForm = ActiveForm::begin(['id' => 'add-participant-form']); ?>
 
 		<?= $activeForm->field($form, 'user_search')->widget(\yii\jui\AutoComplete::classname(), [
@@ -79,6 +79,7 @@ $this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_
 			],
 			'options' => [
 				'class' => 'form-control ui-autocomplete-input',
+				'placeholder' => 'Search by username, email, burn name, or real name',
 			],
 		]);?>
 		<?= Html::activeHiddenInput($form, 'user_id');?>

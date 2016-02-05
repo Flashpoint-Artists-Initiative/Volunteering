@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\data\ArrayDataProvider;
 
-$this->title = "Your shifts - " . Html::encode($event->name);
+$this->title = "My Shifts - " . Html::encode($event->name);
 ?>
 
 <h2>Your Shifts for <?= Html::encode($event->name);?></h2>
@@ -42,7 +42,7 @@ $this->title = "Your shifts - " . Html::encode($event->name);
 <?php else:?>
 <p>You haven't signed up for any shifts for this event.
 <?php if($event->active):?>
-	<?= Html::a("Sign up", ['/']);?> for something!
+	<?= Html::a("Sign up", ['/'], ['class' => 'btn btn-primary btn-xs']);?> for something!
 <?php endif;?>
 </p>
 <?php endif;?>

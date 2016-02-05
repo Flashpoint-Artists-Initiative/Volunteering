@@ -4,6 +4,8 @@ use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
+
+$this->title = "Assign Requirements";
 ?>
 <div>
 	<h1>Assign User Requirements</h1>

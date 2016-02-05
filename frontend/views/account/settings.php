@@ -1,7 +1,10 @@
 <?php 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+
+$this->title = "Account Settings";
 ?>
+<h1>Acconut Settings</h1>
 <?php $form = ActiveForm::begin();?>
 	<div class="form-group">
 		<?= $form->field($model, 'real_name')->textInput(); ?>
