@@ -20,6 +20,7 @@ $config = [
 						'class' => 'yii2mod\rbac\controllers\AssignmentController',
 						'userClassName' => 'common\models\User',
 						'usernameField' => 'username',
+						'searchClass' => 'common\models\UserSearch',
 					]
 				]
 		],

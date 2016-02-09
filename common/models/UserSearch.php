@@ -12,6 +12,7 @@ use common\models\User;
  */
 class UserSearch extends User
 {
+	public $roleSearch;
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class UserSearch extends User
     {
         return [
             ['id', 'integer'],
-            [['username', 'real_name', 'burn_name', 'email'], 'safe'],
+            [['username', 'real_name', 'burn_name', 'email', 'roleSearch'], 'safe'],
         ];
     }
 
@@ -54,6 +55,12 @@ class UserSearch extends User
             // $query->where('0=1');
             return $dataProvider;
         }
+
+		if(isset($this->roleSearch))
+		{
+			$query->joinWith('authAssignments');
+			$query->orFilterWhere(['auth_assignment.item_name' => $this->roleSearch]);
+		}
 
         $query->orFilterWhere([
             'id' => $this->id,

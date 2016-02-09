@@ -15,6 +15,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public $settings;
 
 	public $num_shifts;
+	public $roles;
 
     public static function tableName()
     {
@@ -129,6 +130,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 			->viaTable('user_requirement', ['user_id' => 'id']);
 	}
 
+	public function getAuthAssignments()
+	{
+		return $this->hasMany(\common\models\AuthAssignment::className(), ['user_id' => 'id']);
+	}
+
 	public function beforeSave()
 	{
 		if(!$this->isNewRecord && isset($this->new_password))
@@ -143,6 +149,12 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public function afterFind()
 	{
 		$this->settings = unserialize($this->data);
+		$this->roles = [];
+
+		foreach ($this->authAssignments as $assignment)
+		{
+			$this->roles[] = $assignment->itemname;
+		}
 	}
 
 	public function getEventParticipation($event_id)
@@ -202,5 +214,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 	public function removePasswordResetToken()
 	{
 		$this->password_reset_token = null;
+	}
+
+	public function getAuthRoles()
+	{
 	}
 }
