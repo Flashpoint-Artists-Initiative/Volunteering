@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
 	<p>Login or <?= Html::a('create an account', ['site/signup']);?> to sign up for volunteer shifts.</p>
-    <p><strong>Note</strong> This is not the same as your old Alchemy/Euphoria website login details.</p>
+    <p><strong>Note</strong> This does not use your old Alchemy/Euphoria website login details.  You will need to create a brand new account.</p>
 
     <div class="row">
         <div class="col-lg-5">

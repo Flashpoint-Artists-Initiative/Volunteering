@@ -237,7 +237,7 @@ class Team extends \yii\db\ActiveRecord
 			->joinWith('participants')
 			->where(
 				"team_id = :id AND active = true AND start_time BETWEEN :start AND :end",
-				[':id' => $this->id, ':start' => $start, ':end' => $start + 86400]),
+				[':id' => $this->id, ':start' => $start, ':end' => $start + 86399]),
 			'pagination' => false,
 			'sort' => [
 				'defaultOrder' => [

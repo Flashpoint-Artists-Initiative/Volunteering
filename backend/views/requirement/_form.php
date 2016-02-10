@@ -14,7 +14,10 @@ use yii\helpers\Url;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
+    <div class="form-group">
+    	<?= $form->field($model, 'name')->textInput(['maxlength' => 255]) ?>
+		<p class="help-block">Please include the relevant event and year for the requirement, if applicable.  That way we can tell the difference between each year's Ranger Trainings, etc.
+	</div>
 
     <div class="form-group">
 		<?= $form->field($model, 'team')->widget(\yii\jui\AutoComplete::classname(), [
@@ -29,7 +32,7 @@ use yii\helpers\Url;
 				'class' => 'form-control ui-autocomplete-input',
 			],
 		]);?>
-		<p class="help-block">The team name associated with this requirement.</p>
+		<p class="help-block">Optional. The team name associated with this requirement.</p>
 	</div>
 
     <div class="form-group">

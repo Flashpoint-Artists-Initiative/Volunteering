@@ -5,9 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Team */
 
-$this->title = 'Update Team: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Teams', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->title = 'Update Team: ' . ' ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Events', 'url' => ['/event/index']];
+$this->params['breadcrumbs'][] = ['label' => $model->event->name, 'url' => ['/event/view', 'id' => $model->event_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="team-update">
