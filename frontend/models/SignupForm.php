@@ -16,6 +16,8 @@ class SignupForm extends Model
 	public $real_name;
 	public $burn_name;
 
+	public $reCaptcha;
+
 	public function attributeLabels()
 	{
 		return [
@@ -49,6 +51,8 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+
+			[['reCaptcha'], \himiklab\yii2\recaptcha\ReCaptchaValidator::className()]
         ];
     }
 

@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<p class="help-block">Make sure your email address is correct so the team leads can contact you about your shifts.</p>
 				</div>
 
+				<?= \himiklab\yii2\recaptcha\ReCaptcha::widget(['name' => 'reCaptcha']) ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
