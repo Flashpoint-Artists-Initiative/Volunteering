@@ -21,9 +21,7 @@ $this->title = $event->name . " - " . $team->name;
 			'attribute' => 'start_time',
 			'format' => 'text',
 			'value' => function($model){
-				$start = date('g:i a', $model->start_time);
-				$end = date('g:i a', $model->start_time + ($model->length * 3600));
-				return sprintf("%s - %s (%u hours)", $start, $end, $model->length);
+				return $model->timeAndLength;
 			},
 		],
 		[

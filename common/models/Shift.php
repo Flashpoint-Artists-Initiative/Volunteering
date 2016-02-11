@@ -367,18 +367,21 @@ class Shift extends \yii\db\ActiveRecord
 	{
 		$h = floor($this->length);
 		$m = round(60 * ($this->length - $h));
+
+		$h_string = $h < 2 ? "hour" : "hours";
+		$m_string = $m < 2 ? "minute" : "minutes";
 		
 		if($m == 0)
 		{
-			return sprintf("%u hours", $h);
+			return sprintf("%u %s", $h, $h_string);
 		}
 
 		if($h == 0)
 		{
-			return sprintf("%u minutes", $m);
+			return sprintf("%u %s", $m, $m_string);
 		}
 
-		return sprintf("%u hours, %u minutes", $h, $m);
+		return sprintf("%u %s, %u %s", $h, $h_string, $m, $m_string);
 	}
 
 	public function getTimeAndLength()
