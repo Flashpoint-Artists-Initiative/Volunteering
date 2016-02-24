@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use common\components\MDateTime;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "participant".
@@ -53,8 +54,20 @@ class Participant extends \yii\db\ActiveRecord
             'name' => 'Name',
             'size' => 'Size',
 			'completed' => 'Shift Completed',
+			'timestamp' => 'Timestamp',
         ];
     }
+
+	public function behaviors()
+	{
+		return [
+			[
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'timestamp', 
+				'updatedAtAttribute' => null,
+			],
+		];
+	}
 
 	/**
 	 * Relations
@@ -69,7 +82,7 @@ class Participant extends \yii\db\ActiveRecord
 		return $this->hasOne(Shift::className(), ['id' => 'shift_id']);
 	}
 	
-	public function beforeSave()
+	public function beforeSave($insert)
 	{
 		if(!$this->shift->team->event->active)
 		{
@@ -77,7 +90,7 @@ class Participant extends \yii\db\ActiveRecord
 			return false;
 		}
 
-		return true;
+		return parent::beforeSave($insert);
 	}
 
 	public function beforeDelete()
@@ -87,7 +100,7 @@ class Participant extends \yii\db\ActiveRecord
 			return false;
 		}
 
-		return true;
+		return parent::beforeDelete();
 	}
 
 	public static function findUserEventDataByDay($event_id, $user_id)
