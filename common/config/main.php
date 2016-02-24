@@ -25,12 +25,6 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         'allowedIPs' => [
-			'*',
-            '50.202.126.170', //Work
-            '198.2.191.*', //Work
-            '98.251.87.162', //Home
-            '73.207.58.46', //Home
-       //     '24.126.245.73', //Home
         ],
     ];
 }
