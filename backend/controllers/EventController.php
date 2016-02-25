@@ -179,6 +179,22 @@ class EventController extends Controller
 		]);
 	}
 
+	public function actionReport($id)
+	{
+		$model = $this->findModel($id);
+		$report = $model->generateReport();
+
+		Yii::$app->response->acceptMimeType = "text/csv";
+
+		$out = fopen('php://output', 'w');
+		foreach($report as $line)
+		{
+			fputcsv($out, $line);
+		}
+		
+		fclose($out);
+	}
+
     /**
      * Finds the Event model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

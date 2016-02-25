@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
 		<?= Html::a('View Volunteers', ['volunteers', 'id' => $model->id], ['class' => 'btn btn-success']); ?>
 		<?= Html::a('View Schedule', ['schedule', 'id' => $model->id], ['class' => 'btn btn-success']); ?>
+		<?= Html::a('Download Report', ['report', 'id' => $model->id], ['class' => 'btn btn-success']); ?>
     </p>
 
     <?= DetailView::widget([

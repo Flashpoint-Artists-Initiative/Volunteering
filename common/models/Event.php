@@ -5,6 +5,9 @@ namespace common\models;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
+use common\components\MDateTime;
+use \DateInterval;
+use \DatePeriod;
 
 /**
  * This is the model class for table "event".
@@ -290,5 +293,142 @@ class Event extends \yii\db\ActiveRecord
 			'pagination' => false,
 			'sort' => false,
 		]);
+	}
+
+	public function generateReport()
+	{
+		$output = [];
+		$participants = Participant::find()->joinWith(['shift', 'shift.team'])
+			->where(['team.event_id' => $this->id])
+			->orderBy(['participant.timestamp' => SORT_ASC])
+			->all();
+
+		$date_containers = [];
+		$date_totals = [];
+		$team_names = ["Total Event" => 0];
+		$max_needed = [
+			"Total Event" => $this->maxTotalShifts,
+		];
+		
+		//Get list of teams, plus event total, and their max total shifts
+		foreach($this->teams as $team)
+		{
+			$team_names[$team->name] = 0;
+			$max_needed[$team->name] = $team->maxTotalShifts;
+		}
+
+		//Loop through every participant signup, group by date (week)
+		foreach($participants as $participant)
+		{
+			$dt = new MDateTime($participant->timestamp);
+			$dt->subToStart('W');
+
+			$timestamp = $dt->timestamp;
+			$team_name = $participant->shift->team->name;
+
+			if(!isset($date_containers[$timestamp]))
+			{
+				$date_containers[$timestamp] = $team_names;
+				$date_totals[$timestamp] = 0;
+			}
+
+			if(!isset($date_containers[$timestamp][$team_name]))
+			{
+				$date_containers[$timestamp][$team_name] = 0;
+			}
+
+			$date_containers[$timestamp][$team_name]++;
+			$date_containers[$timestamp]["Total Event"]++;
+			$date_totals[$timestamp]++;
+		}
+
+		//Add missing dates to $date_containers
+		$first_date = new MDateTime(array_keys($date_containers)[0]);
+		$last_date = new MDateTime(array_pop(array_keys($date_containers)));
+		$last_date->add(new DateInterval('P1W'));
+
+		$period = new DatePeriod($first_date, new DateInterval('P1W'), $last_date);
+
+		foreach($period as $dt)
+		{
+			if(!isset($date_containers[$dt->getTimestamp()]))
+			{
+				$date_containers[$dt->getTimestamp()] = $team_names;
+				$date_totals[$dt->getTimestamp()] = 0;
+			}
+		}
+
+		ksort($date_containers);
+		ksort($date_totals);
+
+		//Add previous dates totals to the next date past that one
+		//to show progression over time
+		$current_vals = [];
+		foreach($date_containers as $timestamp => $data)
+		{
+			foreach($data as $team_name => $total)
+			{
+				if(isset($current_vals[$team_name]))
+				{
+					$date_containers[$timestamp][$team_name]+= $current_vals[$team_name];
+				}
+			}
+
+			$current_vals = $date_containers[$timestamp];
+		}
+
+		$headers = ['Team'];
+		foreach($period as $date)
+		{
+			$headers[] = $date->format('n/j');
+		}
+
+		$raw_output = [];
+		$percent_output = [];
+
+		foreach($team_names as $name => $v)
+		{
+			$team_raw_output = [$name];
+			$team_percent_output = [$name];
+			foreach($period as $date)
+			{
+				$team_raw_output[] = $date_containers[$date->getTimestamp()][$name];
+				$team_percent_output[] = sprintf("%.1f%%", ($date_containers[$date->getTimestamp()][$name] / $max_needed[$name]) * 100);
+			}
+
+			$raw_output[] = $team_raw_output;
+			$percent_output[] = $team_percent_output;
+		}
+
+		//Sort by team name
+		$sort_func = function($a, $b)
+		{
+			if($a[0] === "Total Event")
+			{
+				return -1;
+			}
+
+			if($b[0] === "Total Event")
+			{
+				return 1;
+			}
+			
+			return $a[0] > $b[0];
+		};
+
+		usort($raw_output, $sort_func);
+		usort($percent_output, $sort_func);
+
+		$output[] = $headers;
+		$output[] = ["Percent Totals"];
+		$output = array_merge($output, $percent_output);
+		$output[] = [""];
+		$output[] = ["Raw Totals"];
+		$output = array_merge($output, $raw_output);
+		$output[] = [""];
+		$output[] = ["Weekly Total"];
+		$output[] = [""] + $date_totals; 
+
+		return $output;
 	}
 }
