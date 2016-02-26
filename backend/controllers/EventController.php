@@ -192,6 +192,7 @@ class EventController extends Controller
 			fputcsv($out, $line);
 		}
 		
+		Yii::$app->response->setDownloadHeaders($model->name . ' Report.csv', 'text/csv');
 		fclose($out);
 	}
 
