@@ -305,6 +305,7 @@ class Event extends \yii\db\ActiveRecord
 
 		$date_containers = [];
 		$date_totals = [];
+		$user_totals = [];
 		$team_names = ["Total Event" => 0];
 		$max_needed = [
 			"Total Event" => $this->maxTotalShifts,
@@ -330,6 +331,7 @@ class Event extends \yii\db\ActiveRecord
 			{
 				$date_containers[$timestamp] = $team_names;
 				$date_totals[$timestamp] = 0;
+				$user_totals[$timestamp] = 0;
 			}
 
 			if(!isset($date_containers[$timestamp][$team_name]))
@@ -355,11 +357,28 @@ class Event extends \yii\db\ActiveRecord
 			{
 				$date_containers[$dt->getTimestamp()] = $team_names;
 				$date_totals[$dt->getTimestamp()] = 0;
+				$user_totals[$dt->getTimestamp()] = 0;
 			}
+		
+			//Calculate unique user totals from the start to each different time period
+			$unique_ids = [];
+			foreach($participants as $participant)
+			{
+				$end_of_week = new MDateTime($dt->getTimestamp());
+				$end_of_week->addToEnd('W');
+				if($participant->timestamp <= $end_of_week->timestamp);
+				{
+					$unique_ids[$participant->user_id] = 1;
+				}
+			}
+
+			$user_totals[$dt->getTimestamp()] = count($unique_ids);
 		}
 
 		ksort($date_containers);
 		ksort($date_totals);
+		ksort($user_totals);
+
 
 		//Add previous dates totals to the next date past that one
 		//to show progression over time
@@ -428,6 +447,9 @@ class Event extends \yii\db\ActiveRecord
 		$output[] = [""];
 		$output[] = ["Weekly Total"];
 		$output[] = [""] + $date_totals; 
+		$output[] = [""];
+		$output[] = ["Total Unique Users"];
+		$output[] = [""] + $user_totals; 
 
 		return $output;
 	}
