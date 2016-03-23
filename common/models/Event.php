@@ -306,6 +306,7 @@ class Event extends \yii\db\ActiveRecord
 		$date_containers = [];
 		$date_totals = [];
 		$user_totals = [];
+		$multi_shift_totals = [];
 		$team_names = ["Total Event" => 0];
 		$max_needed = [
 			"Total Event" => $this->maxTotalShifts,
@@ -419,6 +420,32 @@ class Event extends \yii\db\ActiveRecord
 			$percent_output[] = $team_percent_output;
 		}
 
+		//Total shifts per participant
+		foreach($participants as $participant)
+		{
+			if(!isset($multi_shift_totals[$participant->user_id]))
+			{
+				$multi_shift_totals[$participant->user_id] = 0;
+			}
+
+			$multi_shift_totals[$participant->user_id]++;
+		}
+
+		$multi_shift_breakdown = [];
+		foreach($multi_shift_totals as $p_total)
+		{
+			$label = $p_total == 1 ? "1 Shift" : "$p_total Shifts";
+
+			if(!isset($multi_shift_breakdown[$p_total]))
+			{
+				$multi_shift_breakdown[$p_total] = [$label, 0];
+			}
+
+			$multi_shift_breakdown[$p_total][1]++;
+		}
+
+		ksort($multi_shift_breakdown);
+
 		//Sort by team name
 		$sort_func = function($a, $b)
 		{
@@ -450,6 +477,10 @@ class Event extends \yii\db\ActiveRecord
 		$output[] = [""];
 		$output[] = ["Total Unique Users"];
 		$output[] = [""] + $user_totals; 
+		$output[] = [""];
+		$output[] = ["Number of Shifts per Volunteer"];
+		$output = array_merge($output, $multi_shift_breakdown);
+		
 
 		return $output;
 	}
