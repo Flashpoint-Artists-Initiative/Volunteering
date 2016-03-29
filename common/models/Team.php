@@ -340,8 +340,8 @@ class Team extends \yii\db\ActiveRecord
 		return new ActiveDataProvider([
 			'query' => User::find()
 				->addSelect([new Expression("user.*, sum(case when participant.user_id = user.id then 1 else 0 end) as num_shifts")])
-				->joinWith(['participation.shift.team'])
-				->where(['team.event_id' => $this->id])
+				->joinWith(['participation.shift'])
+				->where(['shift.team_id' => $this->id])
 				->groupBy('user.id'),
 			'sort' => [
 				'defaultOrder' => [
