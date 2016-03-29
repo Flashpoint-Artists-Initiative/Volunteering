@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use common\models\User;
+use yii\data\ActiveDataProvider;
 
 /**
  * This is the model class for table "requirement".
@@ -72,5 +73,15 @@ class Requirement extends \yii\db\ActiveRecord
 	public function getTeamString()
 	{
 		return isset($this->team) ? $this->team : self::defaultTeam;
+	}
+
+	public function getUserDataProvider()
+	{
+		return new ActiveDataProvider([
+			'query' => User::find()
+				->joinWith(['requirements'])
+				->where(['requirement.id' => $this->id])
+				->groupBy('user.id'),
+		]);
 	}
 }

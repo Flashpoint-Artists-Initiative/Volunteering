@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Requirement */
@@ -36,3 +37,33 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+
+<h4>Volunteers with this Requirement</h4>
+<?php echo GridView::widget([
+	'dataProvider' => $dp,
+	'columns' => [
+		[
+			'attribute' => 'username',
+			'format' => 'raw',
+			'value' => function($model, $k, $i, $c) {
+				return Html::a($model->username, ['/user/view', 'id' => $model->id]);
+			},
+		],
+		'real_name',
+		'burn_name',
+		'email',
+	],
+	'toolbar' => '{export}',
+	'export' => [
+		'label' => 'Export',
+	],
+	'panel'=>[
+		'type'=>GridView::TYPE_DEFAULT,
+	],
+	'exportConfig' => [
+		'csv' => [
+			'colDelimiter' => ',',
+			'rowDelimiter' => "\n",
+		],
+	],
+]);?>
