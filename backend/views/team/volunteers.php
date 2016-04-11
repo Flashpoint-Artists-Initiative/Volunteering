@@ -6,6 +6,9 @@ use kartik\grid\GridView;
 $this->title = $event->name . " volunteers";
 ?>
 <h1><?= Html::encode($event->name);?> Volunteers</h1>
+<p>
+	<?= Html::a('Download Emails', ['volunteer-emails', 'id' => $event->id], ['class' => 'btn btn-info']) ?>
+</p>
 <?php echo GridView::widget([
 	'dataProvider' => $dp,
 	'columns' => [

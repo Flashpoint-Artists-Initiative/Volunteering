@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = Yii::$app->formatter->asDatetime($model->start_
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Download Emails', ['emails', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
     </p>
 
     <?= DetailView::widget([

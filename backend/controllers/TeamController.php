@@ -231,6 +231,18 @@ class TeamController extends Controller
 		]);
 	}
 
+	public function actionVolunteerEmails($id)
+	{
+		$model = $this->findModel($id);
+		$dp = $model->volunteerDataProvider;
+		$dp->pagination = false;
+
+		return $this->renderPartial('volunteer-emails', [
+			'event' => $model,
+			'data' => $dp->getModels(),
+		]);
+	}
+
     /**
      * Finds the Team model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

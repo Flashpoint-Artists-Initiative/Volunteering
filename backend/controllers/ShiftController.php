@@ -76,6 +76,16 @@ class ShiftController extends Controller
         ]);
     }
 
+	public function actionEmails($id)
+	{
+		$model = $this->findModel($id);
+		$users = $model->participants;
+
+		return $this->renderPartial('emails', [
+			'users' => $users,
+		]);
+	}
+
     /**
      * Creates a new Shift model.
      * If creation is successful, the browser will be redirected to the 'view' page.
