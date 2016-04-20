@@ -7,6 +7,10 @@ class m160121_194845_add_password_and_burn_name_to_user extends Migration
 {
     public function up()
     {
+		try {
+			$this->dropTable('user');
+		}
+		catch(Exception $e){}
 		$this->createTable('user', [
 			'id' => $this->primaryKey(),
 			'username' => $this->string()->notNull(),

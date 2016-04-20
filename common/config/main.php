@@ -16,6 +16,12 @@ $config = [
 				'<controller:\w+>/<action:\w+>' => '<controller>/<action>',
 			],
 		],
+		'reCaptcha' => [
+            'name' => 'reCaptcha',
+            'class' => 'himiklab\yii2\recaptcha\ReCaptcha',
+            'siteKey' => 'set in main-local.php',
+            'secret' => 'set in main-local.php',
+        ],
     ],
 ];
 

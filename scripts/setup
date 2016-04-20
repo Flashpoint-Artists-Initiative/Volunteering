@@ -1,0 +1,14 @@
+#!/bin/bash
+
+printf "Has the database info has been added to the config file? (y/n): "
+read -r CONFIRM
+
+if [ $CONFIRM = 'y' ]; then
+
+	../yii migrate
+	../yii migrate --migrationPath=@yii/rbac/migrations
+
+else
+	printf "Set up the database user, then run this script.\n"
+fi
+

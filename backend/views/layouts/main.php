@@ -1,10 +1,21 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use backend\assets\AppAsset;
 use common\widgets\Alert;
+
+$url = parse_url(Url::base(true));
+$base_url = $url['scheme'] . "://" . $url['host'];
+
+$menu_items = [['label' => 'Volunteer Frontend', 'url' => $base_url]];
+
+if(Yii::$app->params['websiteLinks'])
+{
+	$menu_items = array_merge($menu_items, Yii::$app->params['websiteLinks']);
+}
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -68,12 +79,7 @@ AppAsset::register($this);
                 'items' => [
 					[
 						'label' => 'Return to Website', 
-						'items' => [
-							['label' => 'Volunteer Frontend', 'url' => 'http://volunteer.alchemyburn.com'],
-							['label' => 'Alchemy', 'url' => 'http://alchemyburn.com'], 
-							['label' => 'Euphoria', 'url' => 'http://euphoriaburn.com'], 
-							['label' => 'Art Fundraiser', 'url' => 'http://art.alchemyburn.com'], 
-						],
+						'items' => $menu_items,
 					],
 					Yii::$app->user->isGuest ? '' : ['label' => 'Logged in as ' . Yii::$app->user->identity->username, 'url' => ['/#']],
                     Yii::$app->user->isGuest ?
@@ -99,7 +105,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        	<p class="pull-left">&copy; <?= Yii::$app->params['copyright'] . " " . date('Y') ?></p>
 			<p class="pull-right">This site is still a work in progress, please contact 
 				<?= Html::mailto(Yii::$app->params['adminEmail'], Yii::$app->params['adminEmail']);?> with any issues or suggestions.</p>
         </div>

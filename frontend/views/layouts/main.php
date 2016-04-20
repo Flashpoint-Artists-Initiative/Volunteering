@@ -42,14 +42,13 @@ AppAsset::register($this);
 		$menuItems[] = ['label' => 'Volunteer Admin', 'url' => 'http://volunteer.alchemyburn.com/admin'];
 	}
 	
-	$menuItems[] = [
-		'label' => 'Return to Website', 
-		'items' => [
-			['label' => 'Alchemy', 'url' => 'http://alchemyburn.com'], 
-			['label' => 'Euphoria', 'url' => 'http://euphoriaburn.com'], 
-			['label' => 'Art Fundraiser', 'url' => 'http://art.alchemyburn.com'], 
-		],
-	];
+	if(Yii::$app->params['websiteLinks'])
+	{
+		$menuItems[] = [
+			'label' => 'Return to Website', 
+			'items' => Yii::$app->params['websiteLinks'],
+		];
+	}
 	$leftItems = [];
 
     if (Yii::$app->user->isGuest) {
@@ -91,7 +90,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; Flashpoint Artists Initiative <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <?= Yii::$app->params['copyright'] . " " . date('Y') ?></p>
 		<p class="pull-right">This site is still a work in progress, please contact 
 			<?= Html::mailto(Yii::$app->params['adminEmail'], Yii::$app->params['adminEmail']);?> with any issues or suggestions.</p>
     </div>
