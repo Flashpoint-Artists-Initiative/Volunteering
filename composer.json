@@ -13,6 +13,10 @@
         "source": "https://github.com/yiisoft/yii2"
     },
     "minimum-stability": "stable",
+	"repositories": [{
+		"type": "vcs",
+		"url": "https://github.com/Flashpoint-Artists-Initiative/yii2-rbac"
+    }],
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": ">=2.0.6",
