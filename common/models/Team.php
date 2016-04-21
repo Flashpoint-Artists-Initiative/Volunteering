@@ -223,7 +223,7 @@ class Team extends \yii\db\ActiveRecord
 	public function getDayDataProvider($start)
 	{
 		$query = Shift::find();
-		$query->groupBy = 'shift.id';
+		$query->groupBy = ['shift.id'];
 
 		return new ActiveDataProvider([
 			'query' => $query
