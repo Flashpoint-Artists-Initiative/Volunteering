@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "18328c5dc85e197823a9c119e569dd25",
-    "content-hash": "ee1177b2bc680f446a2261cf575a5d7b",
+    "hash": "a91b1b011c4e11bed72ec4ee418aecef",
+    "content-hash": "0cec8bf3cefddbff87dfe25e960f0788",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -541,6 +541,11 @@
                 "kartik-v/yii2-krajee-base": "~1.7"
             },
             "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "kartik\\date\\": ""
@@ -1288,7 +1293,7 @@
             ],
             "authors": [
                 {
-                    "name": "Francois Zaninotto"
+                    "name": "François Zaninotto"
                 }
             ],
             "description": "Faker is a PHP library that generates fake data for you.",
