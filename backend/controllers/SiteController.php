@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\LoginForm;
 use common\models\ContactForm;
