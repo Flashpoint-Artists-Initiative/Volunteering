@@ -314,7 +314,9 @@ class Team extends \yii\db\ActiveRecord
 			if(isset($row[5]))
 			{
 				$requirement = Requirement::findOne(['name' => $row[5]]);
-			}
+			} else {
+                $requirement = null;
+            }
 
 			$shift = new Shift();
 			$shift->title = $row[0];
