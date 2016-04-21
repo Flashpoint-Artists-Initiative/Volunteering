@@ -34,7 +34,7 @@ $this->title = $event->name . " Schedule";
 			'class' => 'yii\grid\ActionColumn',
 			'controller' => 'shift',
 			'urlCreator' => function($action, $model, $key, $index){
-				return Url::toRoute(['/shift/' . $action, 'id' => $key['shift_id']]);
+				return Url::toRoute(['/shift/' . $action, 'id' => $key]);
 			},
 		],
 	],
