@@ -40,20 +40,16 @@ class UserSearch extends User
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function searchQuery($params)
     {
         $query = User::find();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return null; 
         }
 
 		if(isset($this->roleSearch))
@@ -66,12 +62,23 @@ class UserSearch extends User
             'id' => $this->id,
         ]);
 
-        $query->orFilterWhere(['like', 'username', $this->username]) 
-            ->orFilterWhere(['like', 'real_name', $this->real_name])
-            ->orFilterWhere(['like', 'burn_name', $this->burn_name])
-            ->orFilterWhere(['like', 'email', $this->email]);
+        $query->orFilterWhere(['or',
+			['like', 'username', $this->username], 
+            ['like', 'real_name', $this->real_name],
+            ['like', 'burn_name', $this->burn_name],
+            ['like', 'email', $this->email]
+		]);
+
+		return $query;
+    }
+
+	public function search($params)
+	{
+        $dataProvider = new ActiveDataProvider([
+			'query' => $this->searchQuery($params)
+		]);
 
         return $dataProvider;
-    }
+	}
 }
 

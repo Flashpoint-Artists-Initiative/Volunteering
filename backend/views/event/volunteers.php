@@ -8,6 +8,7 @@ $this->title = $event->name . " volunteers";
 <h1><?= Html::encode($event->name);?> Volunteers</h1>
 <?php echo GridView::widget([
 	'dataProvider' => $dp,
+	//'filterModel' => $searchModel,
 	'columns' => [
 		'username',
 		'real_name',

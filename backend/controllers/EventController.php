@@ -8,6 +8,7 @@ use common\models\Team;
 use common\models\EventSearch;
 use common\models\Participant;
 use common\models\User;
+use common\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -171,11 +172,18 @@ class EventController extends Controller
 	public function actionVolunteers($id)
 	{
 		$model = $this->findModel($id);
+		$searchModel = new UserSearch();
+
+        $query = $searchModel->searchQuery(Yii::$app->request->queryParams);
+		
 		$dp = $model->volunteerDataProvider;
+		$dp->pagination = false;
+
 
 		return $this->render('volunteers', [
 			'event' => $model,
 			'dp' => $dp,
+			'searchModel' => $searchModel,
 		]);
 	}
 

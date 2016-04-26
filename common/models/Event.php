@@ -252,13 +252,13 @@ class Event extends \yii\db\ActiveRecord
 		return $new_event->id;
 	}
 
-	public function getVolunteerDataProvider()
+	public function getVolunteerDataProvider($searchModel = null)
 	{
 		return new ActiveDataProvider([
-			'query' => User::find()
+			'query' => isset($searchModel) ? $searchModel : User::find()
 				->addSelect([new Expression("user.*, sum(case when participant.user_id = user.id then 1 else 0 end) as num_shifts")])
 				->joinWith(['participation.shift.team'])
-				->where(['team.event_id' => $this->id])
+				->andWhere(['team.event_id' => $this->id])
 				->groupBy('user.id'),
 			'sort' => [
 				'defaultOrder' => [
