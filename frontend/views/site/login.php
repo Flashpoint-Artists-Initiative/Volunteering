@@ -10,6 +10,9 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="text-center alert alert-info">
+	Alchemy 2017 Volunteer shifts are posted.  Log in to see them.
+</div>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 

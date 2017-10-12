@@ -85,7 +85,9 @@ class Team extends \yii\db\ActiveRecord
 		$sum = 0;
 		foreach($this->shifts as $shift)
 		{
-			$sum += $shift->minSpots;
+			if($this->event->start <= $shift->start_time && $shift->start_time <= $this->event->end) {
+				$sum += $shift->minSpots;
+			}
 		}
 
 		return $sum;
@@ -96,7 +98,9 @@ class Team extends \yii\db\ActiveRecord
 		$sum = 0;
 		foreach($this->shifts as $shift)
 		{
-			$sum += $shift->maxSpots;
+			if($this->event->start <= $shift->start_time && $shift->start_time <= $this->event->end) {
+				$sum += $shift->maxSpots;
+			}
 		}
 
 		return $sum;
@@ -107,7 +111,9 @@ class Team extends \yii\db\ActiveRecord
 		$sum = 0;
 		foreach($this->shifts as $shift)
 		{
-			$sum += $shift->filled;
+			if($this->event->start <= $shift->start_time && $shift->start_time <= $this->event->end) {
+				$sum += $shift->filled;
+			}
 		}
 
 		return $sum;
@@ -132,9 +138,11 @@ class Team extends \yii\db\ActiveRecord
 		$filled = $min_needed = $max_needed = 0;
 		foreach($this->shifts as $shift)
 		{
-			$filled += $shift->filled;
-			$min_needed += $shift->minSpots;
-			$max_needed += $shift->maxSpots;
+			if($this->event->start <= $shift->start_time && $shift->start_time <= $this->event->end) {
+				$filled += $shift->filled;
+				$min_needed += $shift->minSpots;
+				$max_needed += $shift->maxSpots;
+			}
 		}
 
 		return sprintf("%d shifts filled out of %d minimum, %d maximum",
@@ -146,12 +154,14 @@ class Team extends \yii\db\ActiveRecord
 		$min_remaining = $extra_remaining = 0;
 		foreach($this->shifts as $shift)
 		{
-			$filled = min($shift->filled, $shift->minSpots); 
+			if($this->event->start <= $shift->start_time && $shift->start_time <= $this->event->end) {
+				$filled = min($shift->filled, $shift->minSpots); 
 
-			$min_remaining += $shift->minSpots - $filled;
+				$min_remaining += $shift->minSpots - $filled;
 
-			$extra_filled = $shift->filled - $filled;
-			$extra_remaining += $shift->maxSpots - $shift->minSpots - $extra_filled;
+				$extra_filled = $shift->filled - $filled;
+				$extra_remaining += $shift->maxSpots - $shift->minSpots - $extra_filled;
+			}
 		}
 
 		$min_plural = $min_remaining == 1 ? "volunteer" : "volunteers";
