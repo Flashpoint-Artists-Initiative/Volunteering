@@ -26,7 +26,10 @@ $config = [
 		],
 		'gridview' =>  [
 			'class' => 'kartik\grid\Module'
-		]
+		],
+		'settings' => [
+			'class' => 'yii2mod\settings\Module',
+		],
 	],
     'components' => [
         'user' => [
@@ -50,6 +53,18 @@ $config = [
 		],
 		'authManager' => [
 			'class' => 'yii\rbac\DbManager',
+		],
+		'i18n' => [
+			'translations' => [
+				'yii2mod.settings' => [
+					'class' => 'yii\i18n\PhpMessageSource',
+					'basePath' => '@yii2mod/settings/messages',
+				],
+			],
+		],
+		'frontendCache' => [
+			'class' => 'yii\caching\FileCache',
+			'cachePath' => Yii::getAlias('@frontend') . '/runtime/cache'
 		],
     ],
     'params' => $params,

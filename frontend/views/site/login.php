@@ -9,10 +9,13 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
+$settings = Yii::$app->settings;
 ?>
+<?php if ($settings->has('site', 'login_message')):?>
 <div class="text-center alert alert-info">
-	Alchemy 2017 Volunteer shifts are posted.  Log in to see them.
+	<?= Yii::$app->settings->get('site', 'login_message');?>
 </div>
+<?php endif; ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 

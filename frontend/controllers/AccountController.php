@@ -67,7 +67,7 @@ class AccountController extends Controller
 	{
 		if(!isset($id))
 		{
-			$id = Yii::$app->params['currentEvent'];
+			$id = Yii::$app->settings->get('site', 'current_event');
 		}
 
 		$data = Participant::findUserEventDataByDay($id, Yii::$app->user->id);

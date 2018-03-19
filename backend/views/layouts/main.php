@@ -53,6 +53,7 @@ AppAsset::register($this);
 				'items' => [
 					['label' => 'Auth', 'url' => ['/rbac']],
 					['label' => 'Teams','url' => ['/team/index']],
+					['label' => 'Settings', 'url' => ['/settings']],
 				],
 			];
 

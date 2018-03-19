@@ -22,6 +22,9 @@ $config = [
             'siteKey' => 'set in main-local.php',
             'secret' => 'set in main-local.php',
         ],
+		'settings' => [
+			'class' => 'common\components\Settings',
+		],
     ],
 ];
 
