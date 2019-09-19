@@ -269,8 +269,10 @@ class Team extends \yii\db\ActiveRecord
 	{
 		$old_event = $this->event;
 		$new_event = Event::findOne($event_id);
-
-		$time_diff = ($new_event->start - $old_event->start) - floor(($new_event->start - $old_event->start) / (60*60*24));
+		
+		//We want the number of days difference, in seconds.
+		// Total time diff - time diff % seconds in a day
+		$time_diff = ($new_event->start - $old_event->start) - (($new_event->start - $old_event->start) % (60*60*24));
 
 		$new_team = new Team();
 		$new_team->attributes = $this->attributes;
