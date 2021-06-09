@@ -187,6 +187,23 @@ class EventController extends Controller
 		]);
 	}
 
+	public function actionExport($id)
+	{
+		$model = $this->findModel($id);
+		$report = $model->generateParticipantReport();
+
+		Yii::$app->response->acceptMimeType = "text/csv";
+
+		$out = fopen('php://output', 'w');
+		foreach($report as $line)
+		{
+			fputcsv($out, $line);
+		}
+
+		Yii::$app->response->setDownloadHeaders($model->name . ' Participant Export.csv', 'text/csv');
+		fclose($out);
+	}
+
 	public function actionReport($id)
 	{
 		$model = $this->findModel($id);

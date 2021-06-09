@@ -41,6 +41,7 @@ $this->title = $event->name . " Schedule";
 	'toolbar' => '{export}',
 	'export' => [
 		'label' => 'Export',
+		'showConfirmAlert' => false,
 	],
 	'panel'=>[
 		'type'=>GridView::TYPE_DEFAULT,

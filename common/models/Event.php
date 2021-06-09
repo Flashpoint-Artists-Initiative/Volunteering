@@ -295,6 +295,30 @@ class Event extends \yii\db\ActiveRecord
 		]);
 	}
 
+	public function generateParticipantReport()
+	{
+		$output = [];
+		$output[] = ["Team Name", "Date", "Shift Title", "Burn Name", "Real Name", "Email"];
+
+		$participants = Participant::find()->joinWith(['shift', 'shift.team', 'user'])
+			->where(['team.event_id' => $this->id])
+			->orderBy(['participant.timestamp' => SORT_ASC])
+			->all();
+
+		foreach($participants as $participant) {
+			$output[] = [
+				$participant->shift->team->name,
+				$participant->shift->formStart,
+				$participant->shift->title,
+				$participant->user->burn_name,
+				$participant->user->real_name,
+				$participant->user->email,
+			];
+		}
+
+		return $output;
+	}
+
 	public function generateReport()
 	{
 		$output = [];
